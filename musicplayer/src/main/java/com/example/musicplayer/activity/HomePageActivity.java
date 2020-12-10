@@ -100,6 +100,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         dialogView = View.inflate(this, R.layout.dialog_bottom, null);
         animator = AnimatorUtil.build(recode);
         currentPlayMusicName = findViewById(R.id.currentPlayMusicName);
+        currentPlayMusicName.setOnClickListener(this);
         if (application.appSet.getCurrentPlayPosition() != -1) {
             currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
         } else {
@@ -141,6 +142,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
+            case R.id.currentPlayMusicName:
             case R.id.recode:
                 intent = new Intent(this, PlayActivity.class);
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
