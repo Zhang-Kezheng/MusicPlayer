@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.example.musicplayer">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <application
+            android:name=".commons.MusicPlayerApplication"
+            android:icon="@mipmap/logo"
+            android:label="@string/app_name"
+            android:requestLegacyExternalStorage="true"
+            android:roundIcon="@mipmap/logo"
+            android:supportsRtl="true"
+            android:theme="@style/AppTheme"
+            android:usesCleartextTraffic="true"
+            tools:targetApi="q" >
+        <activity android:name=".activity.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name=".activity.HomePageActivity"
+                android:windowSoftInputMode="adjustPan|stateVisible">
+        </activity>
+
+        <service
+                android:name=".commons.MusicService"
+                android:enabled="true"
+                android:exported="true">
+        </service>
+
+        <activity android:name=".activity.PlayActivity"
+                  android:launchMode="singleTask">
+        </activity>
+        <activity
+                android:name=".activity.MVActivity"
+                android:configChanges="orientation|screenSize|keyboardHidden"
+                android:screenOrientation="portrait"
+                tools:ignore="LockedOrientationActivity"/>
+        <receiver
+                android:name=".commons.MusicService$ButtonBroadcastReceiver"
+                android:exported="true" android:permission="TODO" tools:ignore="ExportedReceiver">
+            <intent-filter>
+                <action android:name="play" /><!-- 播放或暂停 -->
+                <action android:name="next" /><!-- 下一首 -->
+                <action android:name="pre"/><!--上一首 -->
+            </intent-filter>
+        </receiver>
+
+    </application>
+</manifest>

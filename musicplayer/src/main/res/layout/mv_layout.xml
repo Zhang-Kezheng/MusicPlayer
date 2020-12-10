@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              tools:context=".activity.MVActivity"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <cn.jzvd.JzvdStd android:layout_width="match_parent" android:layout_height="220dp"
+                     android:id="@+id/mv_view"/>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout android:layout_width="match_parent" android:layout_height="match_parent">
+        <com.google.android.material.appbar.AppBarLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                              android:orientation="vertical"
+                              app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                              android:background="#100E0E">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                              android:textColor="#FFFFFF"
+                              android:layout_marginStart="10dp"
+                              android:textSize="15sp"
+                              android:text="推荐列表"
+                              android:id="@+id/mv_recommend_list"/>
+                    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="100dp"
+                                          android:layout_marginTop="10dp"
+                                          android:scrollbars="none" tools:ignore="UselessParent">
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                                      android:id="@+id/mv_recommend"
+                                      android:orientation="horizontal">
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+        </com.google.android.material.appbar.AppBarLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+                                                           app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                                                           android:layout_height="wrap_content">
+            <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                          android:orientation="horizontal" app:layout_constraintStart_toStartOf="parent"
+                          app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
+                          android:id="@+id/linearLayout2" android:layout_marginTop="10dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:gravity="center"
+                          android:layout_weight="1"
+                          android:textSize="15sp"
+                          android:text="详情" android:id="@+id/mv_detail_title"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textSize="15sp"
+                          android:layout_weight="1"
+                          android:gravity="center"
+                          android:text="评论" android:id="@+id/mv_comment_title"/>
+            </LinearLayout>
+            <ImageView android:layout_width="18dp" android:layout_height="7dp"
+                       android:src="@drawable/a5u"
+                       android:id="@+id/mv_page_img"
+                       app:layout_constraintBottom_toBottomOf="parent"
+                       app:layout_constraintStart_toStartOf="parent"
+                       app:layout_constraintEnd_toEndOf="parent"
+                       app:layout_constraintTop_toBottomOf="@+id/linearLayout2" android:layout_marginTop="2dp"
+                       android:layout_marginBottom="10dp" app:layout_constraintHorizontal_bias="0.22"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+                                               android:layout_marginTop="50dp"
+                                               app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <com.example.musicplayer.pageview.WrapContentHeightViewPager android:layout_width="match_parent"
+                                                                         android:id="@+id/mv_pager"
+                                                                         android:layout_height="wrap_content"/>
+        </androidx.core.widget.NestedScrollView >
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>

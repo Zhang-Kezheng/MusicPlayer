@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+              android:layout_height="50dp">
+    <LinearLayout android:layout_width="wrap_content"
+                  android:layout_centerVertical="true"
+                  android:orientation="vertical"
+                  android:gravity="center_vertical"
+                  android:layout_height="match_parent">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/musicname"
+                  android:textColor="#101010"
+                  android:layout_marginStart="10dp"
+                  android:textSize="15sp"
+                  android:layout_gravity="center_vertical"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                  android:id="@+id/singername"
+                  android:textColor="#434141"
+                  android:layout_marginStart="20dp"
+                  android:textSize="10sp" tools:ignore="SmallSp"/>
+    </LinearLayout>
+    <ImageView android:layout_width="20dp" android:layout_height="20dp"
+               android:src="@drawable/recent_mv"
+               android:layout_alignParentEnd="true"
+               android:layout_centerVertical="true"
+               android:layout_marginEnd="50dp"
+               android:visibility="visible"
+               android:id="@+id/mv"/>
+
+</RelativeLayout>

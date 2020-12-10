@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+
+    <ImageView
+            android:layout_width="100dp"
+            android:layout_height="50dp" android:id="@+id/mv_recommend_img"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/more"/>
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/mv_recommend_videoname"
+            app:layout_constraintTop_toTopOf="parent"
+            android:singleLine="true"
+            android:textColor="#121111"
+            android:layout_marginTop="5dp" app:layout_constraintStart_toEndOf="@+id/mv_recommend_img"
+            android:layout_marginStart="5dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="30dp"/>
+    <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" android:id="@+id/mv_recommend_singername"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:singleLine="true"
+            app:layout_constraintTop_toBottomOf="@+id/mv_recommend_videoname"
+            app:layout_constraintStart_toEndOf="@+id/mv_recommend_img"
+            android:layout_marginStart="5dp" tools:ignore="SmallSp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="30dp"/>
+    <ImageView
+            android:layout_width="17dp"
+            android:layout_height="10dp" app:srcCompat="@drawable/mv"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="15dp" android:id="@+id/mv_recommend_hot_img"
+            app:layout_constraintBottom_toBottomOf="@+id/mv_recommend_img" android:layout_marginBottom="10dp"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/mv_recommend_hot_count"
+            app:layout_constraintStart_toEndOf="@+id/mv_recommend_hot_img" android:layout_marginStart="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/mv_recommend_img" android:layout_marginBottom="10dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

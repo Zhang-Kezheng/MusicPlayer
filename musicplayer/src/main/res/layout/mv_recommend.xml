@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent">
+    <ImageView android:layout_width="120dp" android:layout_height="60dp"
+               android:id="@+id/mv_img"/>
+    <TextView android:layout_width="110dp" android:layout_height="wrap_content"
+              android:text="mv名"
+              android:singleLine="true"
+              android:textColor="#FFFFFF"
+              android:textSize="10sp"
+              android:id="@+id/mv_name" tools:ignore="SmallSp"/>
+    <TextView android:layout_width="110dp" android:layout_height="wrap_content"
+              android:textSize="10sp"
+              android:text="作者"
+              android:singleLine="true"
+              android:textColor="#FFFFFF"
+              android:id="@+id/singername" tools:ignore="SmallSp"/>
+</LinearLayout>

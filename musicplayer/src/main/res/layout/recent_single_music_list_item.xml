@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content">
+
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/songname"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="10dp" android:textSize="15sp" android:textColor="#000000"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="50dp"/>
+    <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/singername"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toBottomOf="@+id/songname" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="50dp" android:textSize="12sp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="10dp"/>
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="15dp" app:srcCompat="@drawable/more"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="25dp" android:id="@+id/more"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="20dp"/>
+    <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp" app:srcCompat="@drawable/mv_unlike" android:id="@+id/like"
+            app:layout_constraintEnd_toStartOf="@+id/more" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="25dp" android:layout_marginEnd="35dp"/>
+    <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp" app:srcCompat="@drawable/add" android:id="@+id/imageView7"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="25dp" android:layout_marginStart="20dp"/>
+    <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp" app:srcCompat="@drawable/listen" android:id="@+id/imageView8"
+            app:layout_constraintEnd_toStartOf="@+id/like" app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="25dp" android:layout_marginEnd="30dp"/>
+    <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp" app:srcCompat="@drawable/recent_mv" android:id="@+id/imageView9"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="30dp" app:layout_constraintEnd_toStartOf="@+id/imageView8"
+            android:layout_marginEnd="30dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="#FFFFFF"
+              android:layout_height="match_parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:gravity="center_vertical"
+                  android:orientation="horizontal">
+        <LinearLayout android:layout_width="50dp"
+                      android:gravity="center"
+                      android:layout_height="30dp">
+            <ImageView android:layout_width="25dp" android:layout_height="25dp"
+                       android:layout_gravity="center_vertical"
+                       android:id="@+id/backs"
+                       android:src="@drawable/recent_back"/>
+        </LinearLayout>
+        <EditText android:layout_width="200dp" android:layout_height="40dp"
+                  android:hint="请输入关键字"
+                  android:inputType="text"
+                  android:singleLine="true"
+                  android:id="@+id/keyword">
+        </EditText>
+    </LinearLayout>
+    <ListView android:layout_width="match_parent" android:layout_height="0dp"
+              android:layout_weight="1"
+              android:divider="@null"
+              android:id="@+id/search_list"/>
+</LinearLayout>

@@ -1,0 +1,17 @@
+﻿<resources>
+    <string name="app_name">MusicPlayer</string>
+    <string name="def_text">找不到歌词！</string>
+    <string name="loading_text">正在获取歌词...</string>
+    <string name="goto_search_text">搜索歌词</string>
+    <string name="load_error_text">加载歌词出错</string>
+    <string name="nonsupport_text">不支持该格式歌词文件显示</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+</resources>
