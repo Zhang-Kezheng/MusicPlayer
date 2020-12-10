@@ -170,7 +170,7 @@ public class MusicService extends Service implements Subject ,Observer{
         //初始化通知
         notification = new Notification.Builder(this).setChannelId(CHANNEL_ONE_ID)
                 .setTicker("Nature")
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.logo)
                 .setContentIntent(pendingIntent)
                 .setCustomBigContentView(remoteViews)
                 .setCustomContentView(remoteViews)
@@ -326,7 +326,9 @@ public class MusicService extends Service implements Subject ,Observer{
             notifyObservers(UPDATE_UI);
             MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
         }
-
+        public void update(){
+            notifyObservers(UPDATE_UI);
+        }
         /**
          * 播放
          */

@@ -42,6 +42,7 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
     private TextView video_title ;
     private List<TextView> textViews;
     private TextView recent_music_count;
+    private TextView my_collect_count;
     private MusicPlayerApplication application;
     public MainFragment() {
     }
@@ -91,12 +92,13 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
         LinearLayout recent = my.findViewById(R.id.recent);
         ImageView search = my.findViewById(R.id.search);
         recent_music_count=my.findViewById(R.id.recent_music_count);
+        my_collect_count=my.findViewById(R.id.my_collect_count);
         application= (MusicPlayerApplication) Objects.requireNonNull(getActivity()).getApplication();
-        if (application.appSet.getMusicInfos()==null){
-            recent_music_count.setText("0");
-        }else {
+        if (application.appSet.getRecentPlay()!=null){
             recent_music_count.setText(application.appSet.getRecentPlay().size()+"");
-
+        }
+        if (application.appSet.getCollect()!=null){
+            my_collect_count.setText(application.appSet.getCollect().size()+"");
         }
         recent.setOnClickListener(this);
         search.setOnClickListener(this);
@@ -171,11 +173,11 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
     public void update(int command) {
         switch (command){
             case MusicPlayerApplication.UPDATE_UI:
-                if (application.appSet.getMusicInfos()==null){
-                    recent_music_count.setText("0");
-                }else {
+                if (application.appSet.getRecentPlay()!=null){
                     recent_music_count.setText(application.appSet.getRecentPlay().size()+"");
-
+                }
+                if (application.appSet.getCollect()!=null){
+                    my_collect_count.setText(application.appSet.getCollect().size()+"");
                 }
                 break;
         }

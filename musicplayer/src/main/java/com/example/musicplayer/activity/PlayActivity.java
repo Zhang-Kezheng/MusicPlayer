@@ -319,6 +319,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 application.appSet.setCollect(collect);
                 MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+                musicControl.update();
                 break;
             case R.id.lrc_set:
                 View view = View.inflate(this, R.layout.lrc_set_layout, null);
