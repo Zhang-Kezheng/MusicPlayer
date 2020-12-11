@@ -90,9 +90,12 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
         video_title.setOnClickListener(this);
         ImageView my_img = view.findViewById(R.id.my_img);
         LinearLayout recent = my.findViewById(R.id.recent);
+        LinearLayout collect = my.findViewById(R.id.collect);
         ImageView search = my.findViewById(R.id.search);
         recent_music_count=my.findViewById(R.id.recent_music_count);
         my_collect_count=my.findViewById(R.id.my_collect_count);
+        recent.setOnClickListener(this);
+        collect.setOnClickListener(this);
         application= (MusicPlayerApplication) Objects.requireNonNull(getActivity()).getApplication();
         if (application.appSet.getRecentPlay()!=null){
             recent_music_count.setText(application.appSet.getRecentPlay().size()+"");
@@ -100,7 +103,7 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
         if (application.appSet.getCollect()!=null){
             my_collect_count.setText(application.appSet.getCollect().size()+"");
         }
-        recent.setOnClickListener(this);
+
         search.setOnClickListener(this);
         PageAdapter pageAdapter = new PageAdapter(pages);
         main_pager.setAdapter(pageAdapter);
@@ -156,6 +159,9 @@ public class MainFragment extends Fragment implements View.OnClickListener , Obs
                 break;
             case R.id.recent:
                 activity.addFragment(new RecentFragment(),"recentFragment");
+                break;
+            case R.id.collect:
+                activity.addFragment(new CollectFragment(),"collectFragment");
                 break;
             case R.id.my_title:
                 main_pager.setCurrentItem(textViews.indexOf(my_title),true);

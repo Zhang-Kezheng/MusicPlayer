@@ -26,31 +26,80 @@ import java.util.Vector;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
+/**
+ * 主页，欢迎页后的第一个页面，
+ */
 public class HomePageActivity extends AppCompatActivity implements View.OnClickListener, Observer, Subject {
-    private MusicPlayerApplication application;//当前应用
+    /**
+     * 当前应用
+     */
+    private MusicPlayerApplication application;
+    /**
+     * 唱片图片
+     */
     private ImageView recode;
+    /**
+     * 播放按钮
+     */
     private ImageView play;
+    /**
+     * 使图片旋转的实例
+     */
     public ObjectAnimator animator;
+    /**
+     * 音乐服务连接
+     */
     private MusicServiceConnect connection;
+    /**
+     * 当前音乐名
+     */
     private TextView currentPlayMusicName;
+    /**
+     * 使图片变成圆形
+     */
     private final RequestOptions mRequestOptions = RequestOptions.circleCropTransform();
+    /**
+     * 播放列表页面的适配器
+     */
     private MusicListAdapter adapter;
+    /**
+     * 弹窗
+     */
     private View dialogView;//dialog的页面视图
+    /**
+     * 观察者模式的观察者列表
+     */
     private final Vector<Observer> observers = new Vector<>();
+
+    /**
+     * 获取音乐服务连接
+     * @return 音乐服务连接
+     */
     public MusicServiceConnect getConnection() {
         return connection;
     }
+
+    /**
+     * 更新页面视图
+     * @param command 命令
+     */
     @Override
     public void update(int command) {
+        //在ui线程里更新视图
         runOnUiThread(() -> {
+            //更新所有fragment里的视图
             notifyObservers(command);
             switch (command) {
-                case PAUSE:
+                case PAUSE://暂停
+                    //停止旋转动画
                     animator.pause();
+                    //播放按钮设置成播放图片
                     play.setImageResource(R.drawable.play);
                     break;
-                case PLAY:
+                case PLAY://播放
+                    //继续旋转动画
                     animator.resume();
+                    //播放按钮设置成暂图片
                     play.setImageResource(R.drawable.pause);
                     break;
                 case NEXT:
@@ -60,10 +109,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 case UPDATE_UI:
                     currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
                     loadImage();
-//                    RecentFragment recentFragment = (RecentFragment) getSupportFragmentManager().findFragmentByTag("recentFragment");
-//                    if (recentFragment!=null){
-//                        recentFragment.update(UPDATE_UI);
-//                    }
                     adapter.setIndex(application.appSet.getCurrentPlayPosition());
                     adapter.notifyDataSetChanged();
                     break;
@@ -87,11 +132,13 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        //连接musicService
         Intent intent = new Intent(this, MusicService.class);
         connection = new MusicServiceConnect();
         bindService(intent, connection, BIND_AUTO_CREATE);
         connection.setActivity(this);
         application = (MusicPlayerApplication) getApplication();
+        //绑定服务
         bindService(intent, connection, BIND_AUTO_CREATE);
         recode=findViewById(R.id.recode);
         play=findViewById(R.id.play);
@@ -140,23 +187,24 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        Intent intent;
+        Intent intent;//创建一个意图
         switch (v.getId()) {
-            case R.id.currentPlayMusicName:
-            case R.id.recode:
+            case R.id.currentPlayMusicName://当前播放歌曲名
+            case R.id.recode://唱片
+                //跳转去歌词页面
                 intent = new Intent(this, PlayActivity.class);
                 startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
                 break;
-            case R.id.play:
+            case R.id.play://播放按钮
+                //播放
                 connection.getMusicControl().play();
                 break;
-            case R.id.next:
+            case R.id.next://下一首
                 if (application.appSet.getCurrentPlayPosition() == -1) return;
                 connection.getMusicControl().next();
                 animator.start();
                 break;
             case R.id.playlist:
-                //TODO 实现播放列表
                 ViewGroup parent = (ViewGroup) dialogView.getParent();
                 if (parent != null) {
                     parent.removeView(dialogView);
@@ -169,6 +217,9 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
+    /**
+     * 重写onBackPressed方法，使返回后不退出程序，而是后台运行
+     */
     @Override
     public void onBackPressed() {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -183,7 +234,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void registerObserver(com.example.musicplayer.Observer o) {
+    public void registerObserver(com.example.musicplayer.Observer o)  {
         observers.add(o);
     }
 
