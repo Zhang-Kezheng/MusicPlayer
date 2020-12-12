@@ -56,7 +56,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     public ListView search_list;
     private SearchMusicInfoData searchMusicInfoData;
     private SearchListAdapter searchListAdapter;
-    private MusicInfo musicInfo;
+    private MusicInfo musicInfo;//被选中的歌曲信息
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -184,6 +184,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     };
 
     private void playMusic(MusicInfo currentMusic) {
+
         if (currentMusic.getMusicPlayUrlData() != null) {
             if ("".equals(currentMusic.getMusicPlayUrlData().getData().getPlayUrl())) {
                 Toast.makeText(SearchFragment.this.getContext(), "暂无资源", Toast.LENGTH_SHORT).show();
@@ -193,7 +194,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                 Toast.makeText(SearchFragment.this.getContext(), "该歌曲为付费歌曲，暂不支持播放", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            List<MusicInfo> songList=application.appSet.getSongList().get(application.appSet.getCurrentSongList());
+            application.appSet.setMusicInfos(songList);
             //frag检查该歌曲是否存在于播放列表，若不存在则添加进播放列表，若存在则不添加使用播放列表的歌曲信息
             boolean flag = false;
             if (application.appSet.getMusicInfos() != null) {
@@ -206,9 +208,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
             }
             if (!flag) {
                 List<MusicInfo> musicInfos = application.appSet.getMusicInfos();
-                if (musicInfos == null) musicInfos = new ArrayList<>();
-                musicInfos.add(musicInfo);
-                application.appSet.setMusicInfos(musicInfos);
+                if (musicInfos == null) musicInfos = new ArrayList<>();//如果歌单为空的话，新建
+                musicInfos.add(currentMusic);//将歌曲信息添加进歌单中
+                application.appSet.setMusicInfos(musicInfos);//设置成当前歌单
+                List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
+                if (recentPlay==null)recentPlay=new ArrayList<>();
+                recentPlay.add(currentMusic);
+                application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
                 application.appSet.setCurrentPlayPosition(application.appSet.getMusicInfos().size() - 1);
             }
             HomePageActivity activity = (HomePageActivity) getActivity();

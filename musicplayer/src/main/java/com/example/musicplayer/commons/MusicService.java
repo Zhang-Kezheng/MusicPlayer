@@ -12,29 +12,19 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.*;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 import androidx.annotation.RequiresApi;
-import com.bumptech.glide.Glide;
 import com.example.musicplayer.Observer;
 import com.example.musicplayer.R;
 import com.example.musicplayer.Subject;
-import com.example.musicplayer.activity.HomePageActivity;
 import com.example.musicplayer.activity.PlayActivity;
-import com.example.musicplayer.fragment.RecentFragment;
 import com.example.musicplayer.model.lrc.GetLyricsData;
 import com.example.musicplayer.model.lrc.SearchLyricsData;
-import com.example.musicplayer.model.music.searchmusicplayurl.SearchMusicPlayUrlData;
-import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.util.HttpUtil;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -284,24 +274,8 @@ public class MusicService extends Service implements Subject ,Observer{
             player.stop();
             running = false;
             player.reset();
-            application.appSet.setCurrentMusic(application.appSet.getMusicInfos().get(position));
+             application.appSet.setCurrentMusic(application.appSet.getMusicInfos().get(position));
             application.appSet.setCurrentPlayPosition(position);
-            List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
-            if (recentPlay==null) recentPlay=new ArrayList<>();
-            if (recentPlay.size() != 0) {
-                boolean flag = false;
-                for (MusicInfo musicInfo : recentPlay) {
-                    if (application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash().equals(musicInfo.getMusicPlayUrlData().getData().getHash())) {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (flag) {
-                    recentPlay.remove(application.appSet.getCurrentMusic());
-                }
-            }
-            recentPlay.add(0,application.appSet.getCurrentMusic());
-            application.appSet.setRecentPlay(recentPlay);
             try {
                 boolean b = checkKrc(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash());
                 if (!b) {

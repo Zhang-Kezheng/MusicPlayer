@@ -14,9 +14,13 @@ import androidx.core.content.ContextCompat;
 import com.example.musicplayer.R;
 import com.example.musicplayer.commons.AppSet;
 import com.example.musicplayer.commons.MusicPlayerApplication;
+import com.example.musicplayer.model.user.MusicInfo;
+
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WelcomeActivity extends AppCompatActivity {
     private final String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -153,6 +157,13 @@ public class WelcomeActivity extends AppCompatActivity {
                     ioException.printStackTrace();
                 }
             }
+        }
+        Map<String, List<MusicInfo>> songList = application.appSet.getSongList();
+        if (songList==null){
+            songList=new HashMap<>();
+            songList.put("最近播放",application.appSet.getRecentPlay());
+            songList.put("我喜欢",application.appSet.getCollect());
+            application.appSet.setSongList(songList);
         }
     }
 }

@@ -29,30 +29,34 @@
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginTop="25dp"
                 android:id="@+id/linearLayout3">
             <TextView
-                    android:gravity="center"
+                    android:gravity="bottom|center_horizontal"
                     android:text="单曲"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView5" android:layout_weight="1"/>
+                    android:layout_height="match_parent" android:id="@+id/recent_title_single_music"
+                    android:layout_weight="1" android:textSize="14sp"/>
             <TextView
                     android:text="歌单"
-                    android:gravity="center"
+                    android:gravity="bottom|center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView4" android:layout_weight="1"/>
+                    android:layout_height="match_parent" android:id="@+id/recent_title_music_list"
+                    android:layout_weight="1"/>
             <TextView
                     android:text="专辑"
-                    android:gravity="center"
+                    android:gravity="bottom|center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView3" android:layout_weight="1"/>
+                    android:layout_height="match_parent" android:id="@+id/recent_title_album"
+                    android:layout_weight="1"/>
             <TextView
                     android:text="视频"
-                    android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView2" android:layout_weight="1"/>
+                    android:gravity="bottom|center_horizontal"
+                    android:layout_height="match_parent" android:id="@+id/recent_title_video"
+                    android:layout_weight="1"/>
         </LinearLayout>
         <androidx.viewpager.widget.ViewPager
                 android:layout_width="0dp"
@@ -67,7 +71,8 @@
                 android:src="@drawable/a5u"
                 android:layout_width="10dp"
                 android:layout_height="5dp" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginStart="44dp" android:id="@+id/fragment_recent_page_indicator" android:layout_marginTop="5dp"
+                android:layout_marginStart="44dp" android:id="@+id/fragment_recent_page_indicator"
+                android:layout_marginTop="2dp"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

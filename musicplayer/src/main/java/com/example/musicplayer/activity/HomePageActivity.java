@@ -70,7 +70,10 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
      * 观察者模式的观察者列表
      */
     private final Vector<Observer> observers = new Vector<>();
-
+    /**
+     *
+     */
+    private ListView musics;
     /**
      * 获取音乐服务连接
      * @return 音乐服务连接
@@ -153,7 +156,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         } else {
             currentPlayMusicName.setText("MusicPlayer");
         }
-        ListView musics = dialogView.findViewById(R.id.musics);
+        musics = dialogView.findViewById(R.id.musics);
         adapter = new MusicListAdapter(this, application);
         musics.setAdapter(adapter);
         adapter.setIndex(application.appSet.getCurrentPlayPosition());

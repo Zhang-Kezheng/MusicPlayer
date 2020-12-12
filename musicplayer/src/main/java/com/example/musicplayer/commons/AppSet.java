@@ -5,7 +5,9 @@ import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.pojo.User;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 章可政
@@ -25,14 +27,23 @@ public class AppSet implements Serializable {
     private List<MV> mvList;//用于存放曾经播放的mv视频
     private List<MusicInfo> recentPlay;//最近播放
     private List<MusicInfo>collect;//收藏
-    private  String currentList="";
+    private Map<String,List<MusicInfo>>songList;//歌单，默认存在我喜欢歌单和最近播放歌单
+    private String currentSongList="最近播放";
 
-    public String getCurrentList() {
-        return currentList;
+    public Map<String, List<MusicInfo>> getSongList() {
+        return songList;
     }
 
-    public void setCurrentList(String currentList) {
-        this.currentList = currentList;
+    public void setSongList(Map<String, List<MusicInfo>> songList) {
+        this.songList = songList;
+    }
+
+    public String getCurrentSongList() {
+        return currentSongList;
+    }
+
+    public void setCurrentSongList(String currentSongList) {
+        this.currentSongList = currentSongList;
     }
 
     public int getLrc_set_lrc_size() {

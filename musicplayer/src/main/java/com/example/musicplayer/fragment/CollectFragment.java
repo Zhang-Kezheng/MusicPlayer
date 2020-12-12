@@ -15,7 +15,6 @@ import com.example.musicplayer.R;
 import com.example.musicplayer.activity.HomePageActivity;
 import com.example.musicplayer.adapter.CollectSingleMusicAdapter;
 import com.example.musicplayer.adapter.PageAdapter;
-import com.example.musicplayer.adapter.RecentSingleMusicAdapter;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import org.jetbrains.annotations.NotNull;
 
@@ -127,10 +126,8 @@ public class CollectFragment extends Fragment implements Observer , View.OnClick
         recent_single_music_list.setAdapter(collectSingleMusicAdapter);
         recent_single_music_list.setOnItemClickListener((parent, view1, position, id) -> {
             collectSingleMusicAdapter.setIndex(position);
-            if (!application.appSet.getCurrentList().equals("收藏")){
-                application.appSet.setCurrentList("收藏");
-                application.appSet.setMusicInfos(application.appSet.getRecentPlay());
-            }
+            application.appSet.setCurrentSongList("我喜欢");
+            application.appSet.setMusicInfos(application.appSet.getSongList().get("我喜欢"));
             activity.getConnection().getMusicControl().changeMusic(position);
             collectSingleMusicAdapter.notifyDataSetChanged();
         });

@@ -3,15 +3,11 @@ package com.example.musicplayer.commons;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import androidx.multidex.MultiDex;
-import com.example.musicplayer.model.mv.MV;
-import com.example.musicplayer.model.user.MusicInfo;
-import com.example.musicplayer.pojo.User;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.List;
 
 public class MusicPlayerApplication extends Application {
     public AppSet appSet;
