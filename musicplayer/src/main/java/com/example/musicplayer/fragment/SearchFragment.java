@@ -8,10 +8,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
@@ -102,10 +99,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
         application = (MusicPlayerApplication) requireActivity().getApplication();
         View inflate = inflater.inflate(R.layout.fragment_search, container, false);
         search_list = inflate.findViewById(R.id.search_list);
-        ImageView backs = inflate.findViewById(R.id.backs);
+        LinearLayout backs = inflate.findViewById(R.id.backs);
         backs.setOnClickListener(this);
         keyword = inflate.findViewById(R.id.keyword);
         keyword.setOnKeyListener(onKeyListener);
+        Button search_button=inflate.findViewById(R.id.search_button);
+        search_button.setOnClickListener(this);
         search_list.setOnItemClickListener((parent, view, position, id) -> {
             searchListAdapter.setIndex(position);
             searchListAdapter.notifyDataSetChanged();
@@ -225,6 +224,23 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
         switch (v.getId()) {
             case R.id.backs:
                 Objects.requireNonNull(getActivity()).onBackPressed();
+                break;
+            case R.id.search_button:
+                    String text = keyword.getText().toString();
+                    if (text.equals("")) {
+                        Toast.makeText(SearchFragment.this.getContext(), "关键词不能为空,请输入关键词", Toast.LENGTH_LONG).show();
+                        return ;
+                    }
+                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    URL url = null;
+                    try {
+                        url = new URL("https://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + text
+                                + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    HttpUtil.sendGetRequest(url, handler, SEARCH_MUSIC_KEYWORD);
                 break;
         }
     }

@@ -288,21 +288,19 @@ public class MusicService extends Service implements Subject ,Observer{
             application.appSet.setCurrentPlayPosition(position);
             List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
             if (recentPlay==null) recentPlay=new ArrayList<>();
-            if (recentPlay.size()==0){
-                recentPlay.add(0,application.appSet.getCurrentMusic());
-            }else {
-                boolean flag=false;
+            if (recentPlay.size() != 0) {
+                boolean flag = false;
                 for (MusicInfo musicInfo : recentPlay) {
-                    if (application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash().equals(musicInfo.getMusicPlayUrlData().getData().getHash())){
-                        flag=true;
+                    if (application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash().equals(musicInfo.getMusicPlayUrlData().getData().getHash())) {
+                        flag = true;
                         break;
                     }
                 }
-                if (flag){
+                if (flag) {
                     recentPlay.remove(application.appSet.getCurrentMusic());
                 }
-                recentPlay.add(0,application.appSet.getCurrentMusic());
             }
+            recentPlay.add(0,application.appSet.getCurrentMusic());
             application.appSet.setRecentPlay(recentPlay);
             try {
                 boolean b = checkKrc(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash());

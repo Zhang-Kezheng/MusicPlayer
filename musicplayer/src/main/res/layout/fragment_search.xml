@@ -16,18 +16,24 @@
                       android:orientation="horizontal">
             <LinearLayout android:layout_width="50dp"
                           android:gravity="center"
+                          android:id="@+id/backs"
                           android:layout_height="30dp">
                 <ImageView android:layout_width="25dp" android:layout_height="25dp"
                            android:layout_gravity="center_vertical"
-                           android:id="@+id/backs"
                            android:src="@drawable/recent_back"/>
             </LinearLayout>
-            <EditText android:layout_width="200dp" android:layout_height="40dp"
+            <EditText android:layout_width="0dp" android:layout_height="20dp"
                       android:hint="请输入关键字"
                       android:inputType="text"
                       android:singleLine="true"
+                      android:background="@drawable/shape"
+                      android:layout_weight="1"
                       android:id="@+id/keyword">
             </EditText>
+            <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:background="@drawable/ripple_bg"
+                    android:id="@+id/search_button"
+                    android:text="搜索"/>
         </LinearLayout>
         <ListView android:layout_width="match_parent" android:layout_height="0dp"
                   android:layout_weight="1"

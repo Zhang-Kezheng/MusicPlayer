@@ -22,6 +22,11 @@ import java.net.URL;
  * @date 2020/10/19 11:59
  */
 public class HttpUtil {
+    /**
+     * 发送一个get请求 用于请求网络上的数据
+     * @param url 网络地址
+     * @return 响应体
+     */
     public static String sendGetRequest(URL url){
         StringBuffer buffer=new StringBuffer();
      Thread t=  new Thread(() -> {
