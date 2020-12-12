@@ -23,8 +23,17 @@ public class AppSet implements Serializable {
     private String currentMode = "列表循环";
     private User user;//用户
     private List<MV> mvList;//用于存放曾经播放的mv视频
-    private List<MusicInfo> recentPlay;
-    private List<MusicInfo>collect;
+    private List<MusicInfo> recentPlay;//最近播放
+    private List<MusicInfo>collect;//收藏
+    private  String currentList="";
+
+    public String getCurrentList() {
+        return currentList;
+    }
+
+    public void setCurrentList(String currentList) {
+        this.currentList = currentList;
+    }
 
     public int getLrc_set_lrc_size() {
         return lrc_set_lrc_size;

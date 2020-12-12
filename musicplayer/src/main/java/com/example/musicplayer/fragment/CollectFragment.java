@@ -127,6 +127,10 @@ public class CollectFragment extends Fragment implements Observer , View.OnClick
         recent_single_music_list.setAdapter(collectSingleMusicAdapter);
         recent_single_music_list.setOnItemClickListener((parent, view1, position, id) -> {
             collectSingleMusicAdapter.setIndex(position);
+            if (!application.appSet.getCurrentList().equals("收藏")){
+                application.appSet.setCurrentList("收藏");
+                application.appSet.setMusicInfos(application.appSet.getRecentPlay());
+            }
             activity.getConnection().getMusicControl().changeMusic(position);
             collectSingleMusicAdapter.notifyDataSetChanged();
         });

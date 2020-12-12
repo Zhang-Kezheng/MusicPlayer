@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.List;
 
+/**
+ * 当前播放列表的适配器
+ */
 public class MusicListAdapter extends BaseAdapter {
     private int index=-1;
     private MusicPlayerApplication application;
