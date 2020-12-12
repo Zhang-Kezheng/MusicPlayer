@@ -274,7 +274,7 @@ public class MusicService extends Service implements Subject ,Observer{
             player.stop();
             running = false;
             player.reset();
-             application.appSet.setCurrentMusic(application.appSet.getMusicInfos().get(position));
+             application.appSet.setCurrentMusic(application.musicInfos.get(position));
             application.appSet.setCurrentPlayPosition(position);
             try {
                 boolean b = checkKrc(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash());
@@ -324,12 +324,12 @@ public class MusicService extends Service implements Subject ,Observer{
             switch (application.appSet.getCurrentMode()) {
                 case "随机播放":
                     Random random = new Random();
-                    application.appSet.setCurrentPlayPosition( random.nextInt(application.appSet.getMusicInfos().size()));
+                    application.appSet.setCurrentPlayPosition( random.nextInt(application.musicInfos.size()));
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
                 case "列表循环":
                     application.appSet.setCurrentPlayPosition(application.appSet.getCurrentPlayPosition()+1);
-                    if (application.appSet.getCurrentPlayPosition() > application.appSet.getMusicInfos().size() - 1) {
+                    if (application.appSet.getCurrentPlayPosition() > application.musicInfos.size() - 1) {
                         application.appSet.setCurrentPlayPosition(0);
                     }
                     changeMusic(application.appSet.getCurrentPlayPosition());
@@ -348,13 +348,13 @@ public class MusicService extends Service implements Subject ,Observer{
             switch (application.appSet.getCurrentMode()) {
                 case "随机播放":
                     Random random = new Random();
-                    application.appSet.setCurrentPlayPosition(random.nextInt(application.appSet.getMusicInfos().size()));
+                    application.appSet.setCurrentPlayPosition(random.nextInt(application.musicInfos.size()));
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
                 case "列表循环":
                     application.appSet.setCurrentPlayPosition(application.appSet.getCurrentPlayPosition()-1);
                     if (application.appSet.getCurrentPlayPosition() < 0) {
-                        application.appSet.setCurrentPlayPosition(application.appSet.getMusicInfos().size()-1);
+                        application.appSet.setCurrentPlayPosition(application.musicInfos.size()-1);
                     }
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;

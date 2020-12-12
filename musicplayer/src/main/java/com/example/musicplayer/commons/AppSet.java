@@ -20,7 +20,6 @@ public class AppSet implements Serializable {
     private boolean enlarge = false;//true歌词放大，false歌词不放大
     private boolean lineByLine = false;//true歌词逐行放大，false歌词逐字放大
     private MusicInfo currentMusic;//当前所播放的音乐
-    private List<MusicInfo> musicInfos;//音乐列表
     private int currentPlayPosition = -1;//当前音乐播放位置
     private String currentMode = "列表循环";
     private User user;//用户
@@ -94,13 +93,6 @@ public class AppSet implements Serializable {
         this.currentMusic = currentMusic;
     }
 
-    public List<MusicInfo> getMusicInfos() {
-        return musicInfos;
-    }
-
-    public void setMusicInfos(List<MusicInfo> musicInfos) {
-        this.musicInfos = musicInfos;
-    }
 
     public int getCurrentPlayPosition() {
         return currentPlayPosition;

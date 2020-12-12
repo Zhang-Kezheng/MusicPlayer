@@ -3,16 +3,20 @@ package com.example.musicplayer.commons;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import androidx.multidex.MultiDex;
+import com.example.musicplayer.model.user.MusicInfo;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.Map;
 
 public class MusicPlayerApplication extends Application {
     public AppSet appSet;
     public boolean isFirst = true;//是否第一次播放，默认为true
     public boolean isPlaying;//是否在播放音乐，默认false
+    public List<MusicInfo> musicInfos;//音乐列表
     @SuppressLint("SdCardPath")
     public static final String LRC_PATH = "/mnt/sdcard/MusicPlayer/lrc/";
     @SuppressLint("SdCardPath")

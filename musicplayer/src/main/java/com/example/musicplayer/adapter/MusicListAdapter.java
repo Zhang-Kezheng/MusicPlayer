@@ -32,7 +32,7 @@ public class MusicListAdapter extends BaseAdapter {
     public MusicListAdapter(Context context, MusicPlayerApplication application) {
         this.context=context;
         this.application=application;
-        this.data=application.appSet.getMusicInfos();
+        this.data=application.musicInfos;
         inflater=LayoutInflater.from(context);
     }
     public void setIndex(int i){
@@ -67,7 +67,7 @@ public class MusicListAdapter extends BaseAdapter {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                application.appSet.getMusicInfos().remove(position);
+                application.musicInfos.remove(position);
                 MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
                 MusicListAdapter.this.notifyDataSetChanged();
 

@@ -103,7 +103,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
         backs.setOnClickListener(this);
         keyword = inflate.findViewById(R.id.keyword);
         keyword.setOnKeyListener(onKeyListener);
-        Button search_button=inflate.findViewById(R.id.search_button);
+        Button search_button = inflate.findViewById(R.id.search_button);
         search_button.setOnClickListener(this);
         search_list.setOnItemClickListener((parent, view, position, id) -> {
             searchListAdapter.setIndex(position);
@@ -194,28 +194,39 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                 Toast.makeText(SearchFragment.this.getContext(), "该歌曲为付费歌曲，暂不支持播放", Toast.LENGTH_SHORT).show();
                 return;
             }
-            List<MusicInfo> songList=application.appSet.getSongList().get(application.appSet.getCurrentSongList());
-            application.appSet.setMusicInfos(songList);
             //frag检查该歌曲是否存在于播放列表，若不存在则添加进播放列表，若存在则不添加使用播放列表的歌曲信息
             boolean flag = false;
-            if (application.appSet.getMusicInfos() != null) {
-                for (MusicInfo musicinfo : application.appSet.getMusicInfos()) {
+            if (application.musicInfos != null) {
+                for (MusicInfo musicinfo : application.musicInfos) {
                     if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
                         flag = true;
-                        application.appSet.setCurrentPlayPosition(application.appSet.getMusicInfos().indexOf(musicinfo));
+                        application.appSet.setCurrentPlayPosition(application.musicInfos.indexOf(musicinfo));
+                        break;
                     }
                 }
             }
             if (!flag) {
-                List<MusicInfo> musicInfos = application.appSet.getMusicInfos();
-                if (musicInfos == null) musicInfos = new ArrayList<>();//如果歌单为空的话，新建
-                musicInfos.add(currentMusic);//将歌曲信息添加进歌单中
-                application.appSet.setMusicInfos(musicInfos);//设置成当前歌单
-                List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
-                if (recentPlay==null)recentPlay=new ArrayList<>();
+                if (application.musicInfos == null) application.musicInfos = new ArrayList<>();//如果歌单为空的话，新建
+                application.musicInfos.add(currentMusic);//将歌曲信息添加进歌单中
+                application.appSet.setCurrentPlayPosition(application.musicInfos.size() - 1);
+            }
+            List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
+            if (recentPlay == null) {
+                recentPlay = new ArrayList<>();
                 recentPlay.add(currentMusic);
                 application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
-                application.appSet.setCurrentPlayPosition(application.appSet.getMusicInfos().size() - 1);
+            } else {
+                boolean isExist = false;
+                for (MusicInfo musicinfo : recentPlay) {
+                    if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    recentPlay.add(currentMusic);
+                    application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
+                }
             }
             HomePageActivity activity = (HomePageActivity) getActivity();
             assert activity != null;
@@ -232,21 +243,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                 Objects.requireNonNull(getActivity()).onBackPressed();
                 break;
             case R.id.search_button:
-                    String text = keyword.getText().toString();
-                    if (text.equals("")) {
-                        Toast.makeText(SearchFragment.this.getContext(), "关键词不能为空,请输入关键词", Toast.LENGTH_LONG).show();
-                        return ;
-                    }
-                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    URL url = null;
-                    try {
-                        url = new URL("https://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + text
-                                + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641");
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                    HttpUtil.sendGetRequest(url, handler, SEARCH_MUSIC_KEYWORD);
+                String text = keyword.getText().toString();
+                if (text.equals("")) {
+                    Toast.makeText(SearchFragment.this.getContext(), "关键词不能为空,请输入关键词", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                URL url = null;
+                try {
+                    url = new URL("https://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + text
+                            + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                HttpUtil.sendGetRequest(url, handler, SEARCH_MUSIC_KEYWORD);
                 break;
         }
     }

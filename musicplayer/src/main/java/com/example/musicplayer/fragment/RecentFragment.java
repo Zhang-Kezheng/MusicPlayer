@@ -182,8 +182,10 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
         recent_single_music_list.setAdapter(recentSingleMusicAdapter);
         recent_single_music_list.setOnItemClickListener((parent, view1, position, id) -> {
             recentSingleMusicAdapter.setIndex(position);
-            application.appSet.setCurrentSongList("最近播放");
-            application.appSet.setMusicInfos(application.appSet.getSongList().get("最近播放"));
+            if (!application.appSet.getCurrentSongList().equals("最近播放")){
+                application.appSet.setCurrentSongList("最近播放");
+                application.musicInfos=application.appSet.getSongList().get("最近播放");
+            }
             activity.getConnection().getMusicControl().changeMusic(position);
             recentSingleMusicAdapter.notifyDataSetChanged();
         });
@@ -207,7 +209,6 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
             if (recentSingleMusicAdapter == null) {
                 return;
             }
-            recentSingleMusicAdapter.setIndex(0);
             recentSingleMusicAdapter.notifyDataSetChanged();
         }
     }

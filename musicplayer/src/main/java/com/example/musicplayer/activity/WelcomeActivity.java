@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.view.WindowManager;
 import android.widget.Toast;
+import androidx.annotation.NavigationRes;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -164,6 +165,18 @@ public class WelcomeActivity extends AppCompatActivity {
             songList.put("最近播放",application.appSet.getRecentPlay());
             songList.put("我喜欢",application.appSet.getCollect());
             application.appSet.setSongList(songList);
+        }
+        switch (application.appSet.getCurrentSongList()){
+            case "最近播放":
+                List<MusicInfo> 最近播放 = songList.get("最近播放");
+                application.musicInfos=最近播放;
+                break;
+            case "我喜欢":
+                List<MusicInfo> 我喜欢 = songList.get("最近播放");
+                application.musicInfos=我喜欢;
+                break;
+            default:
+                break;
         }
     }
 }
