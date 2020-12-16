@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +15,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.NonNull;
 import com.example.musicplayer.R;
 import com.example.musicplayer.activity.MVActivity;
+import com.example.musicplayer.activity.PlayActivity;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.model.music.searchmusicinfo.List;
 import com.example.musicplayer.model.music.searchmusicinfo.SearchMusicInfoData;
+import com.example.musicplayer.model.mv.MV;
+import com.example.musicplayer.model.mv.detail.MVDetail;
 import com.example.musicplayer.model.mv.playurl.MVModel;
 import com.example.musicplayer.pageview.CustomTextView;
 import com.example.musicplayer.util.HttpUtil;
@@ -26,6 +34,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.temporal.ValueRange;
 
+import static com.example.musicplayer.activity.PlayActivity.saveMV;
+import static com.example.musicplayer.commons.MusicPlayerApplication.MV_DETAIL;
+import static com.example.musicplayer.commons.MusicPlayerApplication.MV_PLAY_URL;
+
 /**
  * @author 章可政
  * @date 2020/10/18 18:26
@@ -35,7 +47,9 @@ public class SearchListAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private SearchMusicInfoData data;
     private MusicPlayerApplication application;
-    private Context context;
+    private   Context context;
+    private final MV mvData=new MV();
+    private String mvHash;
     public SearchListAdapter(MusicPlayerApplication application,Context context, SearchMusicInfoData data) {
         this.application=application;
         this.data = data;
@@ -96,7 +110,7 @@ public class SearchListAdapter extends BaseAdapter {
         singername.setText(Html.fromHtml(singerName));
         mv.setOnClickListener(v -> {
             List item = (List)getItem(position);
-            String mvHash=item.getMvHash();
+            mvHash=item.getMvHash();
             String key=DigestUtils.md5Hex(mvHash+ "kugoumvcloud");
             URL url= null;
             try {
@@ -105,14 +119,40 @@ public class SearchListAdapter extends BaseAdapter {
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
-            String s = HttpUtil.sendGetRequest(url);
-            Gson gson=new Gson();
-            MVModel mvModel = gson.fromJson(s, MVModel.class);
-            Intent intent=new Intent(context, MVActivity.class);
-            intent.putExtra( "mvModel", mvModel);
-            context.startActivity(intent);
+            HttpUtil.sendGetRequest(url,handler,MV_PLAY_URL);
         });
         return view;
     }
-
+    public Handler handler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            Bundle bundle = msg.getData();
+            Gson gson=new Gson();
+            switch (msg.what){
+                case MV_PLAY_URL:
+                    String data = bundle.getString("data");
+                    MVModel mvModel = gson.fromJson(data, MVModel.class);
+                    mvData.setMvModel(mvModel);
+                    URL url= null;
+                    try {
+                        url = new URL("http://mobilecdn.kugou.com/api/v3/mv/detail?area_code=1&plat=0&mvhash="+mvHash+"&with_res_tag=1");
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    HttpUtil.sendGetRequest(url,handler,MV_DETAIL);
+                    break;
+                case MV_DETAIL:
+                    data = bundle.getString("data");
+                    data=data.replace("<!--KG_TAG_RES_START-->","");
+                    data=data.replace("<!--KG_TAG_RES_END-->","");
+                    MVDetail mvDetail = gson.fromJson(data, MVDetail.class);
+                    mvData.setMvDetail(mvDetail);
+                    saveMV(mvData,application);
+                    Intent intent=new Intent(context, MVActivity.class);
+                    intent.putExtra("mv",mvData);
+                    context.startActivity(intent);
+                    break;
+            }
+        }
+    };
 }

@@ -3,6 +3,8 @@ package com.example.musicplayer.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -29,7 +31,6 @@ public class WelcomeActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 1;
     private MusicPlayerApplication application;//当前应用
     private MediaPlayer player;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -137,6 +138,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void initAppParam() {
         //初始化应用的配置信息
         File file4 = new File(MusicPlayerApplication.CONFIG_PATH + "appSet.conf");
+
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file4));
             application.appSet = (AppSet) objectInputStream.readObject();
@@ -168,15 +170,14 @@ public class WelcomeActivity extends AppCompatActivity {
         }
         switch (application.appSet.getCurrentSongList()){
             case "最近播放":
-                List<MusicInfo> 最近播放 = songList.get("最近播放");
-                application.musicInfos=最近播放;
+                application.musicInfos= songList.get("最近播放");
                 break;
             case "我喜欢":
-                List<MusicInfo> 我喜欢 = songList.get("最近播放");
-                application.musicInfos=我喜欢;
+                application.musicInfos= songList.get("我喜欢");
                 break;
             default:
                 break;
         }
     }
+
 }

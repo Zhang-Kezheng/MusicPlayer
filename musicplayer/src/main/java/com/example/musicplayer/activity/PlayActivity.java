@@ -2,22 +2,19 @@ package com.example.musicplayer.activity;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
+import android.media.AudioManager;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.*;
-import com.example.musicplayer.adapter.PageAdapter;
 import com.example.musicplayer.commons.BlurTransformation;
 import com.example.musicplayer.adapter.MusicListAdapter;
 import com.example.musicplayer.commons.MusicPlayerApplication;
@@ -28,16 +25,11 @@ import com.example.musicplayer.model.mv.playurl.MVModel;
 import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.util.HttpUtil;
 import com.google.gson.Gson;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialog;
-import com.qmuiteam.qmui.widget.dialog.QMUIDialogBuilder;
 import com.zlm.hp.lyrics.LyricsReader;
 import com.zlm.hp.lyrics.widget.ManyLyricsView;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -45,7 +37,7 @@ import java.util.List;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
-public class PlayActivity extends AppCompatActivity implements View.OnClickListener, Observer, View.OnTouchListener {
+public class PlayActivity extends AppCompatActivity implements View.OnClickListener, Observer {
     public static ManyLyricsView krcView;//歌词视图
     public ImageView play;//播放/暂停按钮
     @SuppressLint("StaticFieldLeak")
@@ -64,6 +56,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     private View dialogView;//dialog的页面视图
     private MV mv=new MV();
     private ImageView like;
+    private MyDialog myDialog;
+    private AudioManager am;//audio管理器
+    private int current;//当前音量
+    private SeekBar play_volume;//音量
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +77,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         }
         setContentView(R.layout.play);
         application = (MusicPlayerApplication) getApplication();
+        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        current = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         Intent intent = new Intent(this, MusicService.class);
         //音乐服务连接
         MusicServiceConnection connection = new MusicServiceConnection();
@@ -90,7 +88,11 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
             play.setImageResource(R.drawable.playpause);
         }
     }
-    void initView() {
+
+    /**
+     * 初始化视图
+     */
+    private void initView() {
         adapter = new MusicListAdapter(this, application);
         adapter.setIndex(application.appSet.getCurrentPlayPosition());
         krcView = findViewById(R.id.lrc);
@@ -129,6 +131,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         ImageView back = findViewById(R.id.back);
         ImageView set = findViewById(R.id.set);
         ImageView lrcset = findViewById(R.id.lrc_set);
+        ImageView comment=findViewById(R.id.comment);
+        comment.setOnClickListener(this);
         like=findViewById(R.id.like);
         if (application.appSet.getCurrentMusic().isLike()){
             like.setImageResource(R.drawable.like);
@@ -139,19 +143,12 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         like.setOnClickListener(this);
         playMv.setOnClickListener(this);
         playlist.setOnClickListener(this);
-        playlist.setOnTouchListener(this);
         playMode.setOnClickListener(this);
-        playMode.setOnTouchListener(this);
         play.setOnClickListener(this);
-        play.setOnTouchListener(this);
         pre.setOnClickListener(this);
-        pre.setOnTouchListener(this);
         next.setOnClickListener(this);
-        next.setOnTouchListener(this);
         back.setOnClickListener(this);
-        back.setOnTouchListener(this);
         set.setOnClickListener(this);
-        set.setOnTouchListener(this);
         lrcset.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -217,26 +214,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void changeLight(ImageView imageView, int brightness) {
-        ColorMatrix cMatrix = new ColorMatrix();
-        cMatrix.set(new float[]{1, 0, 0, 0, brightness, 0, 1, 0, 0,
-                brightness,// 改变亮度
-                0, 0, 1, 0, brightness, 0, 0, 0, 1, 0});
-        imageView.setColorFilter(new ColorMatrixColorFilter(cMatrix));
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            changeLight((ImageView) v, 170);
-        }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
-            changeLight((ImageView) v, 0);
-        }
-        return false;
-    }
-
     class MusicServiceConnection implements ServiceConnection {
 
 
@@ -274,12 +251,43 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 musicControl.next();
                 break;
             case R.id.playlist:
-            case R.id.set:
                 ViewGroup parent = (ViewGroup) dialogView.getParent();
                 if (parent != null) {
                     parent.removeView(dialogView);
                 }
-                new MyDialog(dialogView, this);
+                new MyDialog(dialogView, this,R.style.NormalDialogStyle);
+                break;
+            case R.id.set:
+                View set=View.inflate(this,R.layout.play_set_view,null);
+                Button play_set_close_button = set.findViewById(R.id.play_set_close_button);
+                play_set_close_button.setOnClickListener(this);
+                TextView play_set_music_title=set.findViewById(R.id.play_set_music_title);
+                play_set_music_title.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName()+"-"+application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
+                play_volume=set.findViewById(R.id.play_volume);
+                int max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);// 3
+                current = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                play_volume.setMax(max);
+                play_volume.setProgress(current);
+                play_volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        am.setStreamVolume(AudioManager.STREAM_MUSIC,progress,1);
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+                myDialog = new MyDialog(set, this,R.style.NormalDialogStyle);
+                break;
+            case R.id.play_set_close_button:
+                myDialog.dismiss();
                 break;
             case R.id.back:
                 super.onBackPressed();
@@ -302,6 +310,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.lrc:
                 krcView.setVisibility(View.GONE);
+                break;
+            case R.id.comment:
+                Toast.makeText(this,"该功能正在开发中",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.like:
                 List<MusicInfo> collect = application.appSet.getCollect();
@@ -347,7 +358,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
-                new MyDialog(view, this);
+                new MyDialog(view, this,R.style.NormalDialogStyle);
                 break;
             case R.id.playmv:
                 if (application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHaveMv()==1){
@@ -367,7 +378,20 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (event.getAction()) {
+            case KeyEvent.ACTION_UP://键盘松开ACTION_UP
+            case KeyEvent.ACTION_DOWN: //键盘按下KeyEvent.ACTION_DOWN
+                if (keyCode == KeyEvent.KEYCODE_VOLUME_UP||keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+                    current = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                    if (play_volume!=null){
+                        play_volume.setProgress(current);
+                    }
+                }
 
+        }
+        return super.onKeyDown(keyCode,event);
+    }
     private void loadMusic() {
         if (application.appSet.getCurrentPlayPosition() == -1) return;
         adapter.notifyDataSetChanged();
@@ -406,7 +430,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                     data=data.replace("<!--KG_TAG_RES_END-->","");
                     MVDetail mvDetail = gson.fromJson(data, MVDetail.class);
                     mv.setMvDetail(mvDetail);
-                    saveMV(mv);
+                    saveMV(mv,application);
                     Intent intent=new Intent(PlayActivity.this, MVActivity.class);
                     intent.putExtra("mv",mv);
                     PlayActivity.this.startActivity(intent);
@@ -436,8 +460,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
      * 保存mv信息进本地
      * @param mv mv数据
      */
-    private void saveMV(MV mv) {
-        MusicPlayerApplication application= (MusicPlayerApplication) getApplication();
+    public static void saveMV(MV mv,MusicPlayerApplication application) {
         if (application.appSet.getMvList()==null){
             application.appSet.setMvList(new ArrayList<>());
         }

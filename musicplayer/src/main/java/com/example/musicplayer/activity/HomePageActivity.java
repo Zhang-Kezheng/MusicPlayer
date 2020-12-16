@@ -70,10 +70,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
      * 观察者模式的观察者列表
      */
     private final Vector<Observer> observers = new Vector<>();
-    /**
-     *
-     */
-    private ListView musics;
+
     /**
      * 获取音乐服务连接
      * @return 音乐服务连接
@@ -82,6 +79,111 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         return connection;
     }
 
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
+        //连接musicService
+        Intent intent = new Intent(this, MusicService.class);
+        connection = new MusicServiceConnect();
+        bindService(intent, connection, BIND_AUTO_CREATE);
+        connection.setActivity(this);
+        application = (MusicPlayerApplication) getApplication();
+        //绑定服务
+        bindService(intent, connection, BIND_AUTO_CREATE);
+        recode=findViewById(R.id.recode);
+        play=findViewById(R.id.play);
+        ImageView next = findViewById(R.id.next);
+        ImageView playlist = findViewById(R.id.playlist);
+        dialogView = View.inflate(this, R.layout.dialog_bottom, null);
+        animator = AnimatorUtil.build(recode);
+        currentPlayMusicName = findViewById(R.id.currentPlayMusicName);
+        currentPlayMusicName.setOnClickListener(this);
+        if (application.appSet.getCurrentPlayPosition() != -1) {
+            currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
+        } else {
+            currentPlayMusicName.setText("MusicPlayer");
+        }
+        ListView musics = dialogView.findViewById(R.id.musics);
+        adapter = new MusicListAdapter(this, application);
+        musics.setAdapter(adapter);
+        adapter.setIndex(application.appSet.getCurrentPlayPosition());
+        musics.setOnItemClickListener((parent, view1, position, id) -> {
+            connection.getMusicControl().changeMusic(position);
+            animator.start();
+        });
+        loadImage();//加载图片
+        play.setOnClickListener(this);
+        next.setOnClickListener(this);
+        recode.setOnClickListener(this);
+        playlist.setOnClickListener(this);
+        addFragment(new MainFragment(),"mainFragment");
+    }
+
+    /**
+     * 添加fragment
+     * @param fragment fragment对象
+     * @param tag 标志
+      */
+
+    public void addFragment(Fragment fragment,String tag) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();   // 开启一个事务
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.add(R.id.home_pager, fragment,tag);
+        transaction.addToBackStack(fragment.getClass().getSimpleName());
+        registerObserver((Observer) fragment);
+        transaction.commit();
+    }
+
+    @Override
+    public void onClick(View v) {
+        Intent intent;//创建一个意图
+        switch (v.getId()) {
+            case R.id.currentPlayMusicName://当前播放歌曲名
+            case R.id.recode://唱片
+                //跳转去歌词页面
+                intent = new Intent(this, PlayActivity.class);
+                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
+                break;
+            case R.id.play://播放按钮
+                //播放
+                connection.getMusicControl().play();
+                break;
+            case R.id.next://下一首
+                if (application.appSet.getCurrentPlayPosition() == -1) return;
+                connection.getMusicControl().next();
+                animator.start();
+                break;
+            case R.id.playlist://播放列表
+                ViewGroup parent = (ViewGroup) dialogView.getParent();
+                if (parent != null) {
+                    parent.removeView(dialogView);
+                }
+                new MyDialog(dialogView, this,R.style.NormalDialogStyle);
+                break;
+            case R.id.fragment_recent_back://返回
+                onBackPressed();
+                break;
+        }
+    }
+
+    /**
+     * 重写onBackPressed方法，使返回后不退出程序，而是后台运行
+     */
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if (fragmentManager.getBackStackEntryCount()==1){
+            Intent home = new Intent(Intent.ACTION_MAIN);
+            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            home.addCategory(Intent.CATEGORY_HOME);
+            startActivity(home);
+            return;
+        }
+        super.onBackPressed();
+    }
     /**
      * 更新页面视图
      * @param command 命令
@@ -130,112 +232,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
                 .apply(mRequestOptions)
                 .into(recode);
     }
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home_page);
-        //连接musicService
-        Intent intent = new Intent(this, MusicService.class);
-        connection = new MusicServiceConnect();
-        bindService(intent, connection, BIND_AUTO_CREATE);
-        connection.setActivity(this);
-        application = (MusicPlayerApplication) getApplication();
-        //绑定服务
-        bindService(intent, connection, BIND_AUTO_CREATE);
-        recode=findViewById(R.id.recode);
-        play=findViewById(R.id.play);
-        ImageView next = findViewById(R.id.next);
-        ImageView playlist = findViewById(R.id.playlist);
-        dialogView = View.inflate(this, R.layout.dialog_bottom, null);
-        animator = AnimatorUtil.build(recode);
-        currentPlayMusicName = findViewById(R.id.currentPlayMusicName);
-        currentPlayMusicName.setOnClickListener(this);
-        if (application.appSet.getCurrentPlayPosition() != -1) {
-            currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
-        } else {
-            currentPlayMusicName.setText("MusicPlayer");
-        }
-        musics = dialogView.findViewById(R.id.musics);
-        adapter = new MusicListAdapter(this, application);
-        musics.setAdapter(adapter);
-        adapter.setIndex(application.appSet.getCurrentPlayPosition());
-        musics.setOnItemClickListener((parent, view1, position, id) -> {
-            connection.getMusicControl().changeMusic(position);
-            animator.start();
-        });
-        loadImage();
-        play.setOnClickListener(this);
-        next.setOnClickListener(this);
-        recode.setOnClickListener(this);
-        playlist.setOnClickListener(this);
-        addFragment(new MainFragment(),"mainFragment");
-    }
-
-    /**
-     * 添加fragment
-     * @param fragment fragment对象
-     * @param tag 标志
-     */
-
-    public void addFragment(Fragment fragment,String tag) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();   // 开启一个事务
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        transaction.add(R.id.home_pager, fragment,tag);
-        transaction.addToBackStack(fragment.getClass().getSimpleName());
-        registerObserver((Observer) fragment);
-        transaction.commit();
-    }
-
-    @Override
-    public void onClick(View v) {
-        Intent intent;//创建一个意图
-        switch (v.getId()) {
-            case R.id.currentPlayMusicName://当前播放歌曲名
-            case R.id.recode://唱片
-                //跳转去歌词页面
-                intent = new Intent(this, PlayActivity.class);
-                startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(this).toBundle());
-                break;
-            case R.id.play://播放按钮
-                //播放
-                connection.getMusicControl().play();
-                break;
-            case R.id.next://下一首
-                if (application.appSet.getCurrentPlayPosition() == -1) return;
-                connection.getMusicControl().next();
-                animator.start();
-                break;
-            case R.id.playlist:
-                ViewGroup parent = (ViewGroup) dialogView.getParent();
-                if (parent != null) {
-                    parent.removeView(dialogView);
-                }
-                new MyDialog(dialogView, this);
-                break;
-            case R.id.fragment_recent_back:
-                onBackPressed();
-                break;
-        }
-    }
-
-    /**
-     * 重写onBackPressed方法，使返回后不退出程序，而是后台运行
-     */
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount()==1){
-            Intent home = new Intent(Intent.ACTION_MAIN);
-            home.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            home.addCategory(Intent.CATEGORY_HOME);
-            startActivity(home);
-            return;
-        }
-        super.onBackPressed();
-    }
-
     @Override
     public void registerObserver(com.example.musicplayer.Observer o)  {
         observers.add(o);

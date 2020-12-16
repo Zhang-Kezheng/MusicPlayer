@@ -51,6 +51,7 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
     private int offset = 0;// 动画图片偏移量
     private int currIndex = 0;// 当前页卡编号
     private int bmpW;// 动画图片宽度
+    private ViewPager recent_list_pager;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -95,7 +96,7 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
         activity = (HomePageActivity) getActivity();
         assert activity != null;
         application = (MusicPlayerApplication) Objects.requireNonNull(getActivity()).getApplication();
-        ViewPager recent_list_pager = view.findViewById(R.id.recent_list_pager);
+        recent_list_pager = view.findViewById(R.id.recent_list_pager);
         List<View> views = new ArrayList<>();
         View single_music_page = inflater.inflate(R.layout.single_music_page, null);
         View song_list_page = inflater.inflate(R.layout.song_list_page, null);
@@ -110,6 +111,10 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
         TextView recent_title_music_list=view.findViewById(R.id.recent_title_music_list);
         TextView recent_title_album=view.findViewById(R.id.recent_title_album);
         TextView recent_title_video=view.findViewById(R.id.recent_title_video);
+        recent_title_single_music.setOnClickListener(this);
+        recent_title_music_list.setOnClickListener(this);
+        recent_title_album.setOnClickListener(this);
+        recent_title_video.setOnClickListener(this);
         titles.add(recent_title_single_music);
         titles.add(recent_title_music_list);
         titles.add(recent_title_album);
@@ -117,6 +122,7 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
         recent_list_pager.setAdapter(new PageAdapter(views));
         init_single_music_page(single_music_page);
         init_recent_video_page(recent_video_page);
+        recent_title_single_music.setText("单曲/"+application.appSet.getRecentPlay().size());
         ImageView fragment_recent_page_indicator=view.findViewById(R.id.fragment_recent_page_indicator);
         bmpW = BitmapFactory.decodeResource(getResources(), R.drawable.a5u).getWidth();// 获取图片宽度
         DisplayMetrics dm = new DisplayMetrics();
@@ -141,19 +147,38 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
 
             @Override
             public void onPageSelected(int position) {
-                switch (position){
-                    case 0:
-                        titles.get(position).setText("单曲/"+application.appSet.getRecentPlay().size());
-                        break;
-                    case 1:
-                        titles.get(position).setText("歌单/"+application.appSet.getRecentPlay().size());
-                        break;
-                    case 2:
-                        titles.get(position).setText("专辑/"+application.appSet.getRecentPlay().size());
-                        break;
-                    case 3:
-                        titles.get(position).setText("视频/"+application.appSet.getRecentPlay().size());
-                        break;
+                for (int i = 0; i < titles.size(); i++) {
+                    if (position==i){
+                        switch (position){
+                            case 0:
+                                titles.get(position).setText("单曲/"+application.appSet.getRecentPlay().size());
+                                break;
+                            case 1:
+                                titles.get(position).setText("歌单/"+application.appSet.getRecentPlay().size());
+                                break;
+                            case 2:
+                                titles.get(position).setText("专辑/"+application.appSet.getRecentPlay().size());
+                                break;
+                            case 3:
+                                titles.get(position).setText("视频/"+application.appSet.getRecentPlay().size());
+                                break;
+                        }
+                    }else {
+                        switch (i){
+                            case 0:
+                                titles.get(i).setText("单曲");
+                                break;
+                            case 1:
+                                titles.get(i).setText("歌单");
+                                break;
+                            case 2:
+                                titles.get(i).setText("专辑");
+                                break;
+                            case 3:
+                                titles.get(i).setText("视频");
+                                break;
+                        }
+                    }
                 }
                 Animation animation = new TranslateAnimation(one * currIndex, one * position, 0, 0);//显然这个比较简洁，只有一行代码。
                 currIndex = position;
@@ -215,6 +240,20 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.recent_title_single_music:
+                recent_list_pager.setCurrentItem(0,true);
+                break;
+            case R.id.recent_title_music_list:
+                recent_list_pager.setCurrentItem(1,true);
+                break;
+            case R.id.recent_title_album:
+                recent_list_pager.setCurrentItem(2,true);
+                break;
+            case R.id.recent_title_video:
+                recent_list_pager.setCurrentItem(3,true);
+                break;
+        }
         activity.onClick(v);
     }
 }

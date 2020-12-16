@@ -217,6 +217,7 @@ public class MusicService extends Service implements Subject ,Observer{
                 manager.notify(1, notification);
                 break;
             case PLAY:
+                if (remoteViews!=null)
                 remoteViews.setImageViewResource(R.id.notification_pause,R.drawable.pause);
                 manager.notify(1, notification);
                 break;
