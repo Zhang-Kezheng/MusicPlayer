@@ -18,6 +18,7 @@ import com.example.musicplayer.R;
 import com.example.musicplayer.commons.AppSet;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.model.user.MusicInfo;
+import org.litepal.LitePal;
 
 import java.io.*;
 import java.util.ArrayList;

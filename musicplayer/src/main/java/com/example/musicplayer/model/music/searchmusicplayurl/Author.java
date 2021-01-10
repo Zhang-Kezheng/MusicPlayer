@@ -1,13 +1,14 @@
 
 package com.example.musicplayer.model.music.searchmusicplayurl;
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-public class Author implements Serializable {
+public class Author  implements Serializable {
 
     @SerializedName("author_id")
     private String authorId;

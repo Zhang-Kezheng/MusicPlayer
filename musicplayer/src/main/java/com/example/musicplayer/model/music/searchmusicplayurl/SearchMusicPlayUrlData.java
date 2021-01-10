@@ -1,13 +1,15 @@
 
 package com.example.musicplayer.model.music.searchmusicplayurl;
 
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import org.litepal.LitePal;
+import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 
-@SuppressWarnings("unused")
-public class SearchMusicPlayUrlData implements Serializable {
+public class SearchMusicPlayUrlData  extends LitePalSupport implements Serializable {
 
     @Expose
     private Data data;

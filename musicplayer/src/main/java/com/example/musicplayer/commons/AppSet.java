@@ -1,8 +1,9 @@
 package com.example.musicplayer.commons;
 
+
 import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.user.MusicInfo;
-import com.example.musicplayer.pojo.User;
+import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.Map;
  * @author 章可政
  * @date 2020/12/5 22:31
  */
-public class AppSet implements Serializable {
+public class AppSet  extends LitePalSupport implements Serializable {
     private int lrc_set_lrc_size = 50;//歌词字体大小
     private String lrc_set_lrc_color = "红色";//歌词字体颜色
     private String lrc_set_lrc_font = "";//歌词字体
@@ -22,12 +23,20 @@ public class AppSet implements Serializable {
     private MusicInfo currentMusic;//当前所播放的音乐
     private int currentPlayPosition = -1;//当前音乐播放位置
     private String currentMode = "列表循环";
-    private User user;//用户
-    private List<MV> mvList;//用于存放曾经播放的mv视频
-    private List<MusicInfo> recentPlay;//最近播放
-    private List<MusicInfo>collect;//收藏
-    private Map<String,List<MusicInfo>>songList;//歌单，默认存在我喜欢歌单和最近播放歌单
+    private List<MV> mvList=new ArrayList<>();//用于存放曾经播放的mv视频
+    private List<MusicInfo> recentPlay=new ArrayList<>();//最近播放
+    private List<MusicInfo>collect=new ArrayList<>();//收藏
+    private Map<String,List<MusicInfo>> songList;//歌单，默认存在我喜欢歌单和最近播放歌单
     private String currentSongList="最近播放";
+    private List<String> search_history=new ArrayList<>();//播放历史
+
+    public List<String> getSearch_history() {
+        return search_history;
+    }
+
+    public void setSearch_history(List<String> search_history) {
+        this.search_history = search_history;
+    }
 
     public Map<String, List<MusicInfo>> getSongList() {
         return songList;
@@ -110,13 +119,6 @@ public class AppSet implements Serializable {
         this.currentMode = currentMode;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public List<MV> getMvList() {
         return mvList;

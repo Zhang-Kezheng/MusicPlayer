@@ -1,6 +1,6 @@
 package com.example.musicplayer.model.user;
 
-import com.example.musicplayer.model.music.searchmusicinfo.SearchMusicInfoData;
+
 import com.example.musicplayer.model.music.searchmusicplayurl.SearchMusicPlayUrlData;
 
 import java.io.Serializable;

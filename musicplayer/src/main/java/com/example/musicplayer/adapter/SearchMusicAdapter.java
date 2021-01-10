@@ -1,9 +1,7 @@
 package com.example.musicplayer.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,38 +9,35 @@ import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import com.bumptech.glide.Glide;
 import com.example.musicplayer.R;
 import com.example.musicplayer.activity.MVActivity;
-import com.example.musicplayer.activity.PlayActivity;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.model.music.searchmusicinfo.List;
 import com.example.musicplayer.model.music.searchmusicinfo.SearchMusicInfoData;
+import com.example.musicplayer.model.music.searchmusicplayurl.SearchMusicPlayUrlData;
 import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.mv.detail.MVDetail;
 import com.example.musicplayer.model.mv.playurl.MVModel;
-import com.example.musicplayer.pageview.CustomTextView;
+import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.util.HttpUtil;
 import com.google.gson.Gson;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.temporal.ValueRange;
 
 import static com.example.musicplayer.activity.PlayActivity.saveMV;
-import static com.example.musicplayer.commons.MusicPlayerApplication.MV_DETAIL;
-import static com.example.musicplayer.commons.MusicPlayerApplication.MV_PLAY_URL;
+import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
 /**
  * @author 章可政
- * @date 2020/10/18 18:26
+ * @date 2021/1/9 21:51
  */
-public class SearchListAdapter extends BaseAdapter {
+public class SearchMusicAdapter {
     private int index=-1;
     private LayoutInflater inflater;
     private SearchMusicInfoData data;
@@ -50,7 +45,8 @@ public class SearchListAdapter extends BaseAdapter {
     private   Context context;
     private final MV mvData=new MV();
     private String mvHash;
-    public SearchListAdapter(MusicPlayerApplication application,Context context, SearchMusicInfoData data) {
+    private MusicInfo musicInfo;
+    public SearchMusicAdapter(MusicPlayerApplication application,Context context, SearchMusicInfoData data) {
         this.application=application;
         this.data = data;
         inflater=LayoutInflater.from(context);
@@ -61,57 +57,58 @@ public class SearchListAdapter extends BaseAdapter {
         index=i;
     }
 
-    @Override
     public int getCount() {
         if (data.getData()==null)return 0;
         return data.getData().getLists().size();
     }
 
-    @Override
     public Object getItem(int position) {
         if (data.getData()==null)return null;
         return data.getData().getLists().get(position);
     }
 
-    @Override
     public long getItemId(int position) {
         return position;
     }
 
-    @SuppressLint("ViewHolder")
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position) {
         final View view;
-        final TextView musicname;
-        final TextView singername;
-        final ImageView mv;
-        view = inflater.inflate(R.layout.search_list_listview, parent, false);
-        musicname=view.findViewById(R.id.musicname);
-        singername=view.findViewById(R.id.singername);
-        mv=view.findViewById(R.id.mv);
-        if (index==position){
-            musicname.setTextColor(Color.BLUE);
-            singername.setTextColor(Color.BLUE);
-        }
-        if(((List) getItem(position)).getMvHash().equals("")){
-            mv.setVisibility(View.GONE);
-        }
-        String songName = ((List) getItem(position)).getSongName();
+        String fileName=((List) getItem(position)).getFileName();
+        String songName = fileName.split("-")[1];
         if (songName.contains("<em>")){
-            songName = songName.replace("<em>", "<font color=#FF0000>");
+            songName = songName.replace("<em>", "<font color=#0000FF>");
             songName = songName.replace("</em>", "</font>");
         }
-        musicname.setText(Html.fromHtml(songName));
         String singerName = ((List) getItem(position)).getSingerName();
         if (singerName.contains("<em>")){
-            singerName = singerName.replace("<em>", "<font color=#FF0000>");
+            singerName = singerName.replace("<em>", "<font color=#0000FF>");
             singerName = singerName.replace("</em>", "</font>");
         }
-        singername.setText(Html.fromHtml(singerName));
-        mv.setOnClickListener(v -> {
+        if (index==position){
+            view=inflater.inflate(R.layout.recent_single_music_list_item_selected,null,false);
+            TextView file_name=view.findViewById(R.id.file_name);
+            file_name.setText(Html.fromHtml(songName)+"-"+Html.fromHtml(singerName));
+        }else {
+            final TextView songname;
+            final TextView singername;
+            final ImageView mv;
+            view = inflater.inflate(R.layout.search_music_list_item, null, false);
+            mv=view.findViewById(R.id.mv);
+            if(((List) getItem(position)).getMvHash().equals("")){
+                mv.setVisibility(View.GONE);
+            }
+            songname=view.findViewById(R.id.songname);
+            singername=view.findViewById(R.id.singername);
+            songname.setText(Html.fromHtml(songName));
+            String albumName=((List) getItem(position)).getAlbumName();
+            if (!"".equals(albumName)){
+                albumName="-《"+albumName+"》";
+            }
+            singername.setText(Html.fromHtml(singerName)+albumName);
+                    mv.setOnClickListener(v -> {
             List item = (List)getItem(position);
             mvHash=item.getMvHash();
-            String key=DigestUtils.md5Hex(mvHash+ "kugoumvcloud");
+            String key= DigestUtils.md5Hex(mvHash+ "kugoumvcloud");
             URL url= null;
             try {
                 url = new URL("http://trackermv.kugou.com/interface/index/cmd=100&hash="+mvHash +
@@ -121,6 +118,7 @@ public class SearchListAdapter extends BaseAdapter {
             }
             HttpUtil.sendGetRequest(url,handler,MV_PLAY_URL);
         });
+        }
         return view;
     }
     public Handler handler = new Handler(Looper.getMainLooper()) {
@@ -155,4 +153,6 @@ public class SearchListAdapter extends BaseAdapter {
             }
         }
     };
+
 }
+

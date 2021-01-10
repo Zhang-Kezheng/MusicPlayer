@@ -4,12 +4,10 @@ import android.app.*;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.*;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -26,19 +24,21 @@ import com.google.gson.Gson;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.*;
+import java.util.Base64;
+import java.util.Random;
+import java.util.Vector;
 
 import static com.example.musicplayer.activity.PlayActivity.krcView;
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
 
-public class MusicService extends Service implements Subject ,Observer{
+public class MusicService extends Service implements Subject, Observer {
     private MediaPlayer player;//音乐播放器
     private static MusicPlayerApplication application;//当前应用
     public static MusicControl musicControl;//音乐控制器
     private PlayActivity activity;
     private boolean running;
-    private final Vector<com.example.musicplayer.Observer> observers = new Vector<>();
+    private final Vector<Observer> observers = new Vector<>();
     private NotificationManager manager;
     private RemoteViews remoteViews;
     private Notification notification;
@@ -275,7 +275,7 @@ public class MusicService extends Service implements Subject ,Observer{
             player.stop();
             running = false;
             player.reset();
-             application.appSet.setCurrentMusic(application.musicInfos.get(position));
+            application.appSet.setCurrentMusic(application.musicInfos.get(position));
             application.appSet.setCurrentPlayPosition(position);
             try {
                 boolean b = checkKrc(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash());
@@ -297,7 +297,7 @@ public class MusicService extends Service implements Subject ,Observer{
                 e.printStackTrace();
             }
             notifyObservers(UPDATE_UI);
-            MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+            MusicPlayerApplication.serialization(application.appSet);
         }
         public void update(){
             notifyObservers(UPDATE_UI);

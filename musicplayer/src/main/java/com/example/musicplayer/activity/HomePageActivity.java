@@ -3,6 +3,9 @@ package com.example.musicplayer.activity;
 import android.animation.ObjectAnimator;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.os.Build;
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.Nullable;
@@ -84,6 +87,7 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //连接musicService
         Intent intent = new Intent(this, MusicService.class);
         connection = new MusicServiceConnect();
@@ -221,7 +225,6 @@ public class HomePageActivity extends AppCompatActivity implements View.OnClickL
         });
 
     }
-
     /**
      * 通过网络资源加载圆形图片
      */

@@ -2,11 +2,12 @@
 package com.example.musicplayer.model.music.searchmusicplayurl;
 
 import com.google.gson.annotations.SerializedName;
+import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-public class HashOffset implements Serializable {
+public class HashOffset  implements Serializable {
 
     @SerializedName("end_byte")
     private Long endByte;

@@ -65,6 +65,9 @@ public class HttpUtil {
                 .get()
                 .url(url)
                 .addHeader("Cookie", "kg_mid=9cc69b78794df8550f3c29b2d142ac46")
+                .addHeader("clienttime","1610265088")
+                .addHeader("dfid","4WErRt1NrF6t1yms5H4bfByV")
+                .addHeader("mid","222509261258459411814045547501909370639")
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {

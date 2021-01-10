@@ -49,17 +49,17 @@ import java.util.List;
  * @date 2020/10/18 20:27
  */
 public class MVActivity extends AppCompatActivity implements View.OnClickListener {
-    private JzvdStd mv;
-    private MVModel mvModel;
-    private MVDetail mvDetail;
+    private JzvdStd mv;//视频组件
+    private MVModel mvModel;//mv模型
+    private MVDetail mvDetail;//mv详情
     private WrapContentHeightViewPager mv_pager;
-    private View mv_detail_page;
-    private View mv_comment_page;
-    public static final int GET_RECOMMEND_VIDEO = 1;
-    public static final int Get_Great_Count = 2;
-    public static final int GET_COMMENT_CONTENT = 3;
-    public static final int MV_PLAY_URL = 4;
-    public static final int MV_DETAIL = 5;
+    private View mv_detail_page;//mv详情页
+    private View mv_comment_page;//mv评论页
+    public static final int GET_RECOMMEND_VIDEO = 1;//获取视频推荐
+    public static final int Get_Great_Count = 2;//获取点赞数
+    public static final int GET_COMMENT_CONTENT = 3;//获取评论内容
+    public static final int MV_PLAY_URL = 4;//mv播放url
+    public static final int MV_DETAIL = 5;//mv详情
     private final RequestOptions mRequestOptions = RequestOptions.circleCropTransform();
 
     @Override
@@ -323,6 +323,9 @@ public class MVActivity extends AppCompatActivity implements View.OnClickListene
         HttpUtil.sendGetRequest(url, handler, GET_COMMENT_CONTENT);
     }
 
+    /**
+     * 初始化视频内容
+     */
     private void initVideoView() {
         String imgurl = mvDetail.getData().getInfo().getImgurl();
         imgurl = imgurl.replace("{size}", "400");
@@ -366,10 +369,10 @@ public class MVActivity extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.mv_detail_title:
+            case R.id.mv_detail_title://点击详情跳转页面
                 mv_pager.setCurrentItem(0, true);
                 break;
-            case R.id.mv_comment_title:
+            case R.id.mv_comment_title://点击评论跳转页面
                 mv_pager.setCurrentItem(1, true);
                 break;
         }

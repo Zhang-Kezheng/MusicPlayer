@@ -329,7 +329,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                     collect.add(application.appSet.getCurrentMusic());
                 }
                 application.appSet.setCollect(collect);
-                MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+                MusicPlayerApplication.serialization(application.appSet);
                 musicControl.update();
                 break;
             case R.id.lrc_set:
@@ -345,7 +345,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                             application.appSet.setLrc_set_lrc_size(progress);
                             krcView.setSize(progress,progress,true);
                         }
-                        MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+                        MusicPlayerApplication.serialization(application.appSet);
                     }
 
                     @Override
@@ -392,14 +392,22 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onKeyDown(keyCode,event);
     }
+
+    /**
+     * 加载音乐
+     */
     private void loadMusic() {
         if (application.appSet.getCurrentPlayPosition() == -1) return;
-        adapter.notifyDataSetChanged();
+            adapter.notifyDataSetChanged();//更新播放列表数据
         musics.setOnItemClickListener((parent, view, position, id) -> {
-            musicControl.changeMusic(position);
-           krcView.postInvalidate();
+            musicControl.changeMusic(position);//播放音乐
+           krcView.postInvalidate();//更新歌词页面
         });
     }
+
+    /**
+     * 消息处理
+     */
     public  Handler handler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(@NonNull Message msg) {
@@ -467,6 +475,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         List<MV> mvList = application.appSet.getMvList();
         mvList.add(mv);
         application.appSet.setMvList(mvList);
-        MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+        MusicPlayerApplication.serialization(application.appSet);
     }
 }

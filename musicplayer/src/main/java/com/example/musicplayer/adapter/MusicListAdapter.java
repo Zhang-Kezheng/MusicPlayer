@@ -68,7 +68,7 @@ public class MusicListAdapter extends BaseAdapter {
             @Override
             public void onClick(View v) {
                 application.musicInfos.remove(position);
-                MusicPlayerApplication.serialization(application.appSet,MusicPlayerApplication.CONFIG_PATH+"appSet.conf");
+                MusicPlayerApplication.serialization(application.appSet);
                 MusicListAdapter.this.notifyDataSetChanged();
 
                 Toast.makeText(context,"已移除",Toast.LENGTH_SHORT).show();

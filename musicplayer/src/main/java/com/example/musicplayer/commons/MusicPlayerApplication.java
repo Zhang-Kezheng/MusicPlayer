@@ -4,13 +4,15 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import androidx.multidex.MultiDex;
 import com.example.musicplayer.model.user.MusicInfo;
+import com.example.musicplayer.set.Search_history;
+import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class MusicPlayerApplication extends Application {
     public AppSet appSet;
@@ -33,13 +35,15 @@ public class MusicPlayerApplication extends Application {
     public final static int PRE=-4;
     public final static int UPDATE_UI=-5;
     public final static int CHANGE_LRC=-6;
+    public final static int SEARCH_HOT=-7;
     @Override
     public void onCreate() {
         super.onCreate();
+
         MultiDex.install(this);
     }
-    public static void serialization(AppSet appSet,String path){
-        File file =new File(path);
+    public static void serialization(AppSet appSet){
+        File file =new File(MusicPlayerApplication.CONFIG_PATH + "appSet.conf");
         try {
             ObjectOutputStream outputStream=new ObjectOutputStream(new FileOutputStream(file));
             outputStream.writeObject(appSet);

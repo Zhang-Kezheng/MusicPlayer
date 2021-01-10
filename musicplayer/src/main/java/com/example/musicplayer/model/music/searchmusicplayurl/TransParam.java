@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 @SuppressWarnings("unused")
-public class TransParam implements Serializable {
+public class TransParam  implements Serializable {
 
     @Expose
     private Long cid;
