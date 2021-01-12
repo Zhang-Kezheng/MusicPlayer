@@ -202,7 +202,7 @@ public class RecentFragment extends Fragment implements View.OnClickListener, Ob
      */
     private void init_single_music_page(@NotNull View view) {
         ListView recent_single_music_list = view.findViewById(R.id.recent_single_music_list);
-        recentSingleMusicAdapter = new RecentSingleMusicAdapter(getContext(), application);
+        recentSingleMusicAdapter = new RecentSingleMusicAdapter(getContext(), application.appSet.getRecentPlay());
         recentSingleMusicAdapter.setIndex(0);
         recent_single_music_list.setAdapter(recentSingleMusicAdapter);
         recent_single_music_list.setOnItemClickListener((parent, view1, position, id) -> {

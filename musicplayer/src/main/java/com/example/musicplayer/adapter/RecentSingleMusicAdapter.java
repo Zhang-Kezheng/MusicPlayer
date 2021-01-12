@@ -26,8 +26,8 @@ public class RecentSingleMusicAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
     private final List<MusicInfo> data;
 
-    public RecentSingleMusicAdapter(Context context, MusicPlayerApplication application) {
-        this.data=application.appSet.getRecentPlay();
+    public RecentSingleMusicAdapter(Context context, List<MusicInfo> data) {
+        this.data=data;
         inflater=LayoutInflater.from(context);
     }
     public void setIndex(int i){

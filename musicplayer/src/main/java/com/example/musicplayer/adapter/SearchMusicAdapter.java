@@ -104,7 +104,7 @@ public class SearchMusicAdapter {
             if (!"".equals(albumName)){
                 albumName="-《"+albumName+"》";
             }
-            singername.setText(Html.fromHtml(singerName)+albumName);
+            singername.setText(Html.fromHtml(singerName+albumName));
                     mv.setOnClickListener(v -> {
             List item = (List)getItem(position);
             mvHash=item.getMvHash();
