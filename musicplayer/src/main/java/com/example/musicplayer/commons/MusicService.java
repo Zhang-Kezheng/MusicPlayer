@@ -123,7 +123,7 @@ public class MusicService extends Service implements Subject, Observer {
         //创建通知频道
         NotificationChannel notificationChannel;
         notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-                CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_HIGH);
+                CHANNEL_ONE_NAME, NotificationManager.IMPORTANCE_LOW);
         notificationChannel.enableLights(true);
         notificationChannel.setLightColor(Color.RED);
         notificationChannel.setShowBadge(true);
@@ -165,7 +165,8 @@ public class MusicService extends Service implements Subject, Observer {
                 .setCustomBigContentView(remoteViews)
                 .setCustomContentView(remoteViews)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setSound(null,null)
+                .setOnlyAlertOnce(true)
                 .build();
         notification.flags = Notification.FLAG_NO_CLEAR;
         //将本服务设置前台服务，服务设置为前台时必须依托于通知
