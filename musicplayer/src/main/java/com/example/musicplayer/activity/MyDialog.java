@@ -13,13 +13,13 @@ import org.jetbrains.annotations.NotNull;
  * @author 章可政
  * @date 2020/10/19 20:03
  */
-public class MyDialog extends Dialog{
+public class MyDialog extends Dialog {
     public MyDialog(View view, Context context, int themeResId) {
         super(context, themeResId);
-        init(view,context);
+        init(view, context);
     }
 
-    void init(View view,Context context){
+    void init(View view, Context context) {
         setContentView(view);
         setCanceledOnTouchOutside(true);
         view.setMinimumHeight((int) (ScreenSizeUtils.getInstance(context).getScreenHeight() * 0.5f));

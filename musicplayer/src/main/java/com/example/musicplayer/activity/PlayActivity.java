@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.media.AudioManager;
 import android.os.*;
 import android.view.*;
@@ -100,6 +102,11 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         krcView.setOnLrcClickListener(progress -> musicControl.seekTo(progress));
         krcView.setOnClickListener(this);
         bg=findViewById(R.id.bg);
+        int brightness = -80; //RGB偏移量，变暗为负数
+        ColorMatrix matrix = new ColorMatrix();
+        matrix.set(new float[]{1, 0, 0, 0, brightness, 0, 1, 0, 0, brightness, 0, 0, 1, 0, brightness, 0, 0, 0, 1, 0});
+        ColorMatrixColorFilter cmcf = new ColorMatrixColorFilter(matrix);
+        bg.setColorFilter(cmcf); //imageView为显示图片的View。
         if (application.appSet.getCurrentMusic()!=null){
             Glide.with(this).load(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getImg())
                     .apply(RequestOptions.bitmapTransform(new BlurTransformation(this,24,10))).into(bg);

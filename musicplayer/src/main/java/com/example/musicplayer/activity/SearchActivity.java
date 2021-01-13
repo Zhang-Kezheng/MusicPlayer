@@ -1,27 +1,23 @@
-package com.example.musicplayer.fragment;
-
+package com.example.musicplayer.activity;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.widget.NestedScrollView;
-import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
-import com.example.musicplayer.Observer;
 import com.example.musicplayer.R;
-import com.example.musicplayer.activity.HomePageActivity;
 import com.example.musicplayer.adapter.RecentSingleMusicAdapter;
 import com.example.musicplayer.adapter.SearchMusicAdapter;
 import com.example.musicplayer.adapter.SearchTipListAdapter;
@@ -39,16 +35,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
-public class SearchFragment extends Fragment implements View.OnClickListener, Observer {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private MusicPlayerApplication application;//当前应用
+public class SearchActivity extends BaseActivity {
     private EditText keyword;//关键字
     private SearchMusicInfoData searchMusicInfoData;//搜索出来的音乐数据
     private MusicInfo musicInfo;//被选中的歌曲信息
@@ -66,77 +56,64 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     private TextView search_local_title;
     private TextView search_online_title;
     private RecentSingleMusicAdapter localTipsAdapter;
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private LinearLayout backs;
+    private Button search_button;
+    private ImageView search_history_delete;
 
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    @Override
+    public void setContentLayout() {
+        setContentView(R.layout.activity_search);
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    public void beforeInitView() {
+
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        application = (MusicPlayerApplication) requireActivity().getApplication();
-        View inflate = inflater.inflate(R.layout.fragment_search, container, false);
-        showOrHide(getContext());
-        search_music = inflate.findViewById(R.id.search_music);
-        LinearLayout backs = inflate.findViewById(R.id.backs);
-        flexboxLayout = inflate.findViewById(R.id.search_history);
-        progressBar = inflate.findViewById(R.id.progress_bar);
-        recommend = inflate.findViewById(R.id.recommend);
-        search_recommend = inflate.findViewById(R.id.search_recommend);
-        music_recommend = inflate.findViewById(R.id.music_recommend);
-        search_tips = inflate.findViewById(R.id.search_tips);
-        music_list = inflate.findViewById(R.id.music_list);
-        search_online_title=inflate.findViewById(R.id.search_online_title);
-        search_local_title=inflate.findViewById(R.id.search_local_title);
-        search_local_title.setOnClickListener(this);
-        search_online_title.setOnClickListener(this);
-        search_online = inflate.findViewById(R.id.search_online);
-        search_local=inflate.findViewById(R.id.search_local);
-        search_online.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                TextView tip = view.findViewById(R.id.tip);
-                keyword.setText(tip.getText());
-                searchMusic();
-            }
-        });
-        search_local.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                localTipsAdapter.setIndex(position);
-                localTipsAdapter.notifyDataSetChanged();
-            }
-        });
+    public void initView() {
+        showOrHide(this);
+        search_music = findViewById(R.id.search_music);
+        backs = findViewById(R.id.backs);
+        flexboxLayout = findViewById(R.id.search_history);
+        progressBar = findViewById(R.id.progress_bar);
+        recommend = findViewById(R.id.recommend);
+        search_recommend = findViewById(R.id.search_recommend);
+        music_recommend = findViewById(R.id.music_recommend);
+        search_tips = findViewById(R.id.search_tips);
+        music_list = findViewById(R.id.music_list);
+        search_online_title = findViewById(R.id.search_online_title);
+        search_local_title = findViewById(R.id.search_local_title);
+        search_online = findViewById(R.id.search_online);
+        search_local = findViewById(R.id.search_local);
+        search_button = findViewById(R.id.search_button);
+        keyword = findViewById(R.id.keyword);
+        search_history_delete=findViewById(R.id.search_history_delete);
         views = new ArrayList<>();
+    }
+
+    @Override
+    public void afterInitView() {
         views.add(music_recommend);
         views.add(search_tips);
         views.add(progressBar);
         views.add(music_list);
         showView(0);
+        search_local_title.setOnClickListener(this);
+        search_online_title.setOnClickListener(this);
         backs.setOnClickListener(this);
-        keyword = inflate.findViewById(R.id.keyword);
+        keyword.setOnKeyListener(onKeyListener);
+        search_button.setOnClickListener(this);
+        search_history_delete.setOnClickListener(this);
+        search_online.setOnItemClickListener((parent, view, position, id) -> {
+            TextView tip = view.findViewById(R.id.tip);
+            keyword.setText(tip.getText());
+            searchMusic();
+        });
+        search_local.setOnItemClickListener((parent, view, position, id) -> {
+            localTipsAdapter.setIndex(position);
+            localTipsAdapter.notifyDataSetChanged();
+        });
         keyword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -160,26 +137,68 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
         });
         keyword.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
-                flexboxLayout.removeAllViews();
-                List<String> search_history = application.appSet.getSearch_history();
-                if (search_history == null) return;
-                for (String s : search_history) {
-                    View view = inflater.inflate(R.layout.mv_tags, null);
-                    TextView tag = view.findViewById(R.id.mv_tag);
-                    tag.setText(s);
-                    tag.setOnClickListener(this);
-                    flexboxLayout.addView(view);
-                }
-            } else {
-
+                initSearchHistory();
             }
         });
-        keyword.setOnKeyListener(onKeyListener);
-        Button search_button = inflate.findViewById(R.id.search_button);
-        search_button.setOnClickListener(this);
         getSearch_hot();
-        return inflate;
+        loadImage();
+        initSearchHistory();
 
+    }
+
+    private void initSearchHistory() {
+        flexboxLayout.removeAllViews();
+        List<String> search_history = application.appSet.getSearch_history();
+        if (search_history == null) return;
+        for (String s : search_history) {
+            View view = View.inflate(this, R.layout.mv_tags, null);
+            TextView tag = view.findViewById(R.id.mv_tag);
+            tag.setText(s);
+            tag.setOnClickListener(this);
+            flexboxLayout.addView(view);
+        }
+    }
+    private void deleteSearchHistory(){
+        flexboxLayout.removeAllViews();
+        List<String> search_history = application.appSet.getSearch_history();
+        search_history.clear();
+        application.appSet.setSearch_history(search_history);
+        MusicPlayerApplication.serialization(application.appSet);
+    }
+    @Override
+    public void onClickEvent(View v) {
+        switch (v.getId()) {
+            case R.id.backs:
+                super.onBackPressed();
+                break;
+            case R.id.search_button:
+                searchMusic();
+                break;
+            case R.id.mv_tag:
+                TextView textView = (TextView) v;
+                keyword.setText(textView.getText());
+                searchMusic();
+                break;
+            case R.id.search_history_delete:
+                deleteSearchHistory();
+                break;
+            case R.id.search_online_title:
+                search_online_title.setBackgroundResource(R.drawable.border_left_selected);
+                search_online_title.setTextColor(Color.WHITE);
+                search_local_title.setBackgroundResource(R.drawable.border_right);
+                search_local_title.setTextColor(Color.BLUE);
+                search_online.setVisibility(View.VISIBLE);//在线搜索可见
+                search_local.setVisibility(View.GONE);//本地搜索不可见
+                break;
+            case R.id.search_local_title:
+                search_online_title.setBackgroundResource(R.drawable.border_left);
+                search_online_title.setTextColor(Color.BLUE);
+                search_local_title.setBackgroundResource(R.drawable.border_right_selected);
+                search_local_title.setTextColor(Color.WHITE);
+                search_online.setVisibility(View.GONE);//在线搜索不可见
+                search_local.setVisibility(View.VISIBLE);//本地搜索可见
+                break;
+        }
     }
 
     public void showOrHide(Context context) {
@@ -240,7 +259,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                     int i = data.lastIndexOf(")");
                     data = data.substring(0, i);
                     searchMusicInfoData = gson.fromJson(data, SearchMusicInfoData.class);
-                    SearchMusicAdapter searchMusicAdapter = new SearchMusicAdapter(application, getContext(), searchMusicInfoData);
+                    SearchMusicAdapter searchMusicAdapter = new SearchMusicAdapter(application, SearchActivity.this, searchMusicInfoData);
                     loadSearchMusicList(searchMusicAdapter);
                     showView(3);
                     break;
@@ -254,7 +273,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                     musicInfo.setMusicPlayUrlData(currentMusic);
                     View childAt = search_music.getChildAt(index);
                     ImageView singer_head = childAt.findViewById(R.id.singer_head);
-                    Glide.with(getContext())
+                    Glide.with(SearchActivity.this)
                             .load(musicInfo.getMusicPlayUrlData().getData().getAuthors().get(0).getAvatar())
                             .into(singer_head);
                     playMusic(musicInfo);
@@ -275,9 +294,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     /**
      * 初始化本地搜索列表
      */
-    private void initLocalTips(String key){
+    private void initLocalTips(String key) {
         List<MusicInfo> musicInfos = searchLocal(key);
-        localTipsAdapter = new RecentSingleMusicAdapter(getContext(),musicInfos);
+        localTipsAdapter = new RecentSingleMusicAdapter(SearchActivity.this, musicInfos);
         search_local.setAdapter(localTipsAdapter);
         localTipsAdapter.notifyDataSetChanged();
 
@@ -285,10 +304,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
 
     /**
      * 初始化在线搜索列表
+     *
      * @param tips 提示
      */
     private void initTipList(SeachTips tips) {
-        SearchTipListAdapter searchTipListAdapter = new SearchTipListAdapter(getContext(), tips);
+        SearchTipListAdapter searchTipListAdapter = new SearchTipListAdapter(SearchActivity.this, tips);
         search_online.setAdapter(searchTipListAdapter);
         searchTipListAdapter.notifyDataSetChanged();
     }
@@ -296,12 +316,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     private void initRecommendList(RecommendMusicData recommendMusicData) {
         List<com.example.musicplayer.model.music.recommend.List> list = recommendMusicData.getData().getList();
         for (com.example.musicplayer.model.music.recommend.List list1 : list) {
-            View view = View.inflate(getContext(), R.layout.recommend_music_block, null);
+            View view = View.inflate(SearchActivity.this, R.layout.recommend_music_block, null);
             TextView title = view.findViewById(R.id.title);
             title.setText(list1.getName());
             LinearLayout linearLayout = view.findViewById(R.id.list);
             for (int i = 0; i < list1.getKeywords().size(); i++) {
-                View view1 = View.inflate(getContext(), R.layout.resoubang_item, null);
+                View view1 = View.inflate(SearchActivity.this, R.layout.resoubang_item, null);
                 int finalI = i;
                 view1.setOnClickListener(v -> {
                     showView(2);
@@ -362,11 +382,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
 
         if (currentMusic.getMusicPlayUrlData() != null) {
             if ("".equals(currentMusic.getMusicPlayUrlData().getData().getPlayUrl())) {
-                Toast.makeText(SearchFragment.this.getContext(), "暂无资源", Toast.LENGTH_SHORT).show();
+                showToast("暂无资源");
                 return;
             }
             if (currentMusic.getMusicPlayUrlData().getData().getTransParam() != null) {
-                Toast.makeText(SearchFragment.this.getContext(), "该歌曲为付费歌曲，暂不支持播放", Toast.LENGTH_SHORT).show();
+                showToast("该歌曲为付费歌曲，暂不支持播放");
                 return;
             }
             //frag检查该歌曲是否存在于播放列表，若不存在则添加进播放列表，若存在则不添加使用播放列表的歌曲信息
@@ -403,61 +423,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
                     application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
                 }
             }
-            HomePageActivity activity = (HomePageActivity) getActivity();
-            assert activity != null;
-            activity.getConnection().getMusicControl().changeMusic(application.appSet.getCurrentPlayPosition());
+            connection.getMusicControl().changeMusic(application.appSet.getCurrentPlayPosition());
             MusicPlayerApplication.serialization(application.appSet);
 
         }
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.backs:
-                Objects.requireNonNull(getActivity()).onBackPressed();
-                break;
-            case R.id.search_button:
-                showView(2);
-                String text = keyword.getText().toString();
-                if (text.equals("")) {
-                    Toast.makeText(SearchFragment.this.getContext(), "关键词不能为空,请输入关键词", Toast.LENGTH_LONG).show();
-                    return;
-                }
-                InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                URL url = null;
-                try {
-                    url = new URL("https://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + text
-                            + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                HttpUtil.sendGetRequest(url, handler, SEARCH_MUSIC_KEYWORD);
-                break;
-            case R.id.mv_tag:
-                TextView textView = (TextView) v;
-                keyword.setText(textView.getText());
-                searchMusic();
-                break;
-            case R.id.search_online_title:
-                search_online_title.setBackgroundResource(R.drawable.border_left_selected);
-                search_online_title.setTextColor(Color.WHITE);
-                search_local_title.setBackgroundResource(R.drawable.border_right);
-                search_local_title.setTextColor(Color.BLUE);
-                search_online.setVisibility(View.VISIBLE);//在线搜索可见
-                search_local.setVisibility(View.GONE);//本地搜索不可见
-                break;
-            case R.id.search_local_title:
-                search_online_title.setBackgroundResource(R.drawable.border_left);
-                search_online_title.setTextColor(Color.BLUE);
-                search_local_title.setBackgroundResource(R.drawable.border_right_selected);
-                search_local_title.setTextColor(Color.WHITE);
-                search_online.setVisibility(View.GONE);//在线搜索不可见
-                search_local.setVisibility(View.VISIBLE);//本地搜索可见
-                break;
-        }
-
     }
 
     /**
@@ -466,7 +435,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
     private void searchMusic() {
         String text = keyword.getText().toString();
         if (text.equals("")) {
-            Toast.makeText(SearchFragment.this.getContext(), "关键词不能为空,请输入关键词", Toast.LENGTH_LONG).show();
+            showToast("关键词不能为空,请输入关键词");
             return;
         }
         showView(2);
@@ -493,21 +462,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Ob
         HttpUtil.sendGetRequest(url, handler, SEARCH_MUSIC_KEYWORD);
     }
 
-    @Override
-    public void update(int command) {
-
-    }
-
     /**
      * 本地搜索
+     *
      * @param key 关键词
      * @return 音乐集合
      */
-    private List<MusicInfo> searchLocal(String key){
+    private List<MusicInfo> searchLocal(String key) {
         List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
-        List<MusicInfo> local=new ArrayList<>();
+        List<MusicInfo> local = new ArrayList<>();
         for (MusicInfo info : recentPlay) {
-            if (info.getMusicPlayUrlData().getData().getSongName().contains(key)||info.getMusicPlayUrlData().getData().getAuthorName().contains(key)) {
+            if (info.getMusicPlayUrlData().getData().getSongName().contains(key) || info.getMusicPlayUrlData().getData().getAuthorName().contains(key)) {
                 local.add(info);
             }
         }

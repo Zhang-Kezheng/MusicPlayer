@@ -32,6 +32,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST = 1;
     private MusicPlayerApplication application;//当前应用
     private MediaPlayer player;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +60,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     private void startMainActivity() {
-        Intent mainIntent = new Intent(WelcomeActivity.this, HomePageActivity.class);
+        Intent mainIntent = new Intent(WelcomeActivity.this, MainActivity.class);
         startActivity(mainIntent);
         WelcomeActivity.this.finish();
     }
@@ -143,18 +144,18 @@ public class WelcomeActivity extends AppCompatActivity {
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(file4));
             application.appSet = (AppSet) objectInputStream.readObject();
-            if (application.appSet==null){
-                application.appSet=new AppSet();
-                ObjectOutputStream objectOutputStream=new ObjectOutputStream(new FileOutputStream(file4));
+            if (application.appSet == null) {
+                application.appSet = new AppSet();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file4));
                 objectOutputStream.writeObject(application.appSet);
                 objectOutputStream.close();
             }
             objectInputStream.close();
         } catch (IOException | ClassNotFoundException e) {
-            if (application.appSet==null){
-                application.appSet=new AppSet();
+            if (application.appSet == null) {
+                application.appSet = new AppSet();
                 try {
-                    ObjectOutputStream objectOutputStream=new ObjectOutputStream(new FileOutputStream(file4));
+                    ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(file4));
                     objectOutputStream.writeObject(application.appSet);
                     objectOutputStream.close();
                 } catch (IOException ioException) {
@@ -163,18 +164,18 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         }
         Map<String, List<MusicInfo>> songList = application.appSet.getSongList();
-        if (songList==null){
-            songList=new HashMap<>();
-            songList.put("最近播放",application.appSet.getRecentPlay());
-            songList.put("我喜欢",application.appSet.getCollect());
+        if (songList == null) {
+            songList = new HashMap<>();
+            songList.put("最近播放", application.appSet.getRecentPlay());
+            songList.put("我喜欢", application.appSet.getCollect());
             application.appSet.setSongList(songList);
         }
-        switch (application.appSet.getCurrentSongList()){
+        switch (application.appSet.getCurrentSongList()) {
             case "最近播放":
-                application.musicInfos= songList.get("最近播放");
+                application.musicInfos = songList.get("最近播放");
                 break;
             case "我喜欢":
-                application.musicInfos= songList.get("我喜欢");
+                application.musicInfos = songList.get("我喜欢");
                 break;
             default:
                 break;

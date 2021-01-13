@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.RecentActivity">
+    <ImageView
+            android:layout_width="20dp"
+            android:layout_height="23dp" app:srcCompat="@drawable/recent_back"
+            app:layout_constraintStart_toStartOf="parent" android:id="@+id/fragment_recent_back"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.03"/>
+    <TextView
+            android:text="最近播放"
+            android:textColor="#000000"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView"
+            app:layout_constraintStart_toEndOf="@+id/fragment_recent_back" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.05" android:textSize="19sp" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent" android:textStyle="bold"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginTop="25dp"
+            android:id="@+id/linearLayout3">
+        <TextView
+                android:gravity="bottom|center_horizontal"
+                android:text="单曲"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/recent_title_single_music"
+                android:layout_weight="1" android:textSize="14sp"/>
+        <TextView
+                android:text="歌单"
+                android:gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/recent_title_music_list"
+                android:layout_weight="1"/>
+        <TextView
+                android:text="专辑"
+                android:gravity="bottom|center_horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" android:id="@+id/recent_title_album"
+                android:layout_weight="1"/>
+        <TextView
+                android:text="视频"
+                android:layout_width="wrap_content"
+                android:gravity="bottom|center_horizontal"
+                android:layout_height="match_parent" android:id="@+id/recent_title_video"
+                android:layout_weight="1"/>
+    </LinearLayout>
+    <androidx.viewpager.widget.ViewPager
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            android:id="@+id/recent_list_pager" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            android:layout_marginTop="10dp"/>
+    <ImageView
+            android:src="@drawable/a5u"
+            android:layout_width="10dp"
+            android:layout_height="5dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="44dp" android:id="@+id/fragment_recent_page_indicator"
+            android:layout_marginTop="2dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
+    <LinearLayout
+            android:layout_width="match_parent" android:layout_height="60dp"
+            android:background="@drawable/shape"
+            android:layout_gravity="bottom"
+            android:id="@+id/include"
+            android:orientation="horizontal" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+        <ImageView android:layout_width="40dp" android:layout_height="40dp"
+                   android:src="@drawable/recode"
+                   android:layout_gravity="center_vertical"
+                   android:layout_weight="0.2"
+                   android:id="@+id/recode"/>
+        <TextView android:layout_width="150dp" android:layout_height="wrap_content"
+                  android:id="@+id/currentPlayMusicName"
+                  android:singleLine="true"
+                  android:layout_gravity="center_vertical"/>
+        <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                   android:id="@+id/play"
+                   android:layout_weight="0.2"
+                   android:layout_gravity="center_vertical"
+                   android:src="@drawable/play"
+                   android:background="#0000"/>
+        <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                   android:id="@+id/next"
+                   android:src="@drawable/next"
+                   android:layout_gravity="center_vertical"
+                   android:background="#0000"
+                   android:layout_weight="0.2"/>
+        <ImageView android:layout_width="20dp" android:layout_height="20dp"
+                   android:id="@+id/playlist"
+                   android:layout_gravity="center_vertical"
+                   android:src="@drawable/musiclist"
+                   android:layout_weight="0.2"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
