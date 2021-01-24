@@ -3,6 +3,8 @@ package com.example.musicplayer.commons;
 
 import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.user.MusicInfo;
+import com.example.musicplayer.set.ApplicationTypeFace;
+import com.example.musicplayer.set.MusicPlayMode;
 import org.litepal.crud.LitePalSupport;
 
 import java.io.Serializable;
@@ -22,13 +24,22 @@ public class AppSet  extends LitePalSupport implements Serializable {
     private boolean lineByLine = false;//true歌词逐行放大，false歌词逐字放大
     private MusicInfo currentMusic;//当前所播放的音乐
     private int currentPlayPosition = -1;//当前音乐播放位置
-    private String currentMode = "列表循环";
+    private MusicPlayMode playMode = MusicPlayMode.ListLoop;
     private List<MV> mvList=new ArrayList<>();//用于存放曾经播放的mv视频
     private List<MusicInfo> recentPlay=new ArrayList<>();//最近播放
     private List<MusicInfo>collect=new ArrayList<>();//收藏
     private Map<String,List<MusicInfo>> songList;//歌单，默认存在我喜欢歌单和最近播放歌单
     private String currentSongList="最近播放";
     private List<String> search_history=new ArrayList<>();//播放历史
+    private ApplicationTypeFace typeFace=ApplicationTypeFace.DEFAULT;
+
+    public ApplicationTypeFace getTypeFace() {
+        return typeFace;
+    }
+
+    public void setTypeFace(ApplicationTypeFace typeFace) {
+        this.typeFace = typeFace;
+    }
 
     public List<String> getSearch_history() {
         return search_history;
@@ -111,14 +122,14 @@ public class AppSet  extends LitePalSupport implements Serializable {
         this.currentPlayPosition = currentPlayPosition;
     }
 
-    public String getCurrentMode() {
-        return currentMode;
+
+    public MusicPlayMode getPlayMode() {
+        return playMode;
     }
 
-    public void setCurrentMode(String currentMode) {
-        this.currentMode = currentMode;
+    public void setPlayMode(MusicPlayMode playMode) {
+        this.playMode = playMode;
     }
-
 
     public List<MV> getMvList() {
         return mvList;

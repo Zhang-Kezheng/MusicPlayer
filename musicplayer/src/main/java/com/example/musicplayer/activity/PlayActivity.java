@@ -8,12 +8,14 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.*;
@@ -25,6 +27,8 @@ import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.mv.detail.MVDetail;
 import com.example.musicplayer.model.mv.playurl.MVModel;
 import com.example.musicplayer.model.user.MusicInfo;
+import com.example.musicplayer.set.ApplicationTypeFace;
+import com.example.musicplayer.set.MusicPlayMode;
 import com.example.musicplayer.util.HttpUtil;
 import com.google.gson.Gson;
 import com.zlm.hp.lyrics.LyricsReader;
@@ -62,6 +66,11 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     private AudioManager am;//audio管理器
     private int current;//当前音量
     private SeekBar play_volume;//音量
+    private View lrcSetView;
+    private Typeface 站酷文艺体;
+    private Typeface 优设标题黑;
+    private List<LinearLayout> typefaceList;
+    private Switch lrc_large;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +104,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化视图
      */
     private void initView() {
+        initLrcSetView();
         adapter = new MusicListAdapter(this, application);
         adapter.setIndex(application.appSet.getCurrentPlayPosition());
         krcView = findViewById(R.id.lrc);
@@ -141,7 +151,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         ImageView comment=findViewById(R.id.comment);
         comment.setOnClickListener(this);
         like=findViewById(R.id.like);
-        if (application.appSet.getCurrentMusic().isLike()){
+        if (application.appSet.getCurrentMusic()!=null&&application.appSet.getCurrentMusic().isLike()){
             like.setImageResource(R.drawable.like);
         }else {
             like.setImageResource(R.drawable.unlike);
@@ -157,6 +167,17 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         back.setOnClickListener(this);
         set.setOnClickListener(this);
         lrcset.setOnClickListener(this);
+        switch (application.appSet.getPlayMode()){
+            case SingleCycle:
+                playMode.setImageResource(R.drawable.one);
+                break;
+            case ListLoop:
+                playMode.setImageResource(R.drawable.list);
+                break;
+            case ShufflePlayback:
+                playMode.setImageResource(R.drawable.ran);
+                break;
+        }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -178,6 +199,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 musicControl.seekTo(progress);
             }
         });
+        initTypeface();//初始化字体
     }
 
     @Override
@@ -300,19 +322,22 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 super.onBackPressed();
                 break;
             case R.id.playMode:
-                if (application.appSet.getCurrentMode().equals("随机播放")) {
-                    playMode.setImageResource(R.drawable.one);
-                    application.appSet.setCurrentMode("单曲循环");
-                    return;
-                }
-                if (application.appSet.getCurrentMode().equals("单曲循环")) {
-                    playMode.setImageResource(R.drawable.list);
-                    application.appSet.setCurrentMode("列表循环");
-                    return;
-                }
-                if (application.appSet.getCurrentMode().equals("列表循环")) {
-                    playMode.setImageResource(R.drawable.ran);
-                    application.appSet.setCurrentMode("随机播放");
+                switch (application.appSet.getPlayMode()){
+                    case SingleCycle:
+                        playMode.setImageResource(R.drawable.list);
+                        application.appSet.setPlayMode(MusicPlayMode.ListLoop);
+                        Toast.makeText(this,"列表循环",Toast.LENGTH_SHORT).show();
+                        break;
+                    case ListLoop:
+                        playMode.setImageResource(R.drawable.ran);
+                        application.appSet.setPlayMode(MusicPlayMode.ShufflePlayback);
+                        Toast.makeText(this,"随机播放",Toast.LENGTH_SHORT).show();
+                        break;
+                    case ShufflePlayback:
+                        playMode.setImageResource(R.drawable.one);
+                        application.appSet.setPlayMode(MusicPlayMode.SingleCycle);
+                        Toast.makeText(this,"单曲循环",Toast.LENGTH_SHORT).show();
+                        break;
                 }
                 break;
             case R.id.lrc:
@@ -336,36 +361,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                     collect.add(application.appSet.getCurrentMusic());
                 }
                 application.appSet.setCollect(collect);
-                MusicPlayerApplication.serialization(application.appSet);
                 musicControl.update();
                 break;
             case R.id.lrc_set:
-                View view = View.inflate(this, R.layout.lrc_set_layout, null);
-                SeekBar lrc_set_lrc_size=view.findViewById(R.id.lrc_set_lrc_size);
-                lrc_set_lrc_size.setMax(100);
-                lrc_set_lrc_size.setMin(30);
-                lrc_set_lrc_size.setProgress(application.appSet.getLrc_set_lrc_size());
-                lrc_set_lrc_size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                    @Override
-                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                        if (fromUser) {
-                            application.appSet.setLrc_set_lrc_size(progress);
-                            krcView.setSize(progress,progress,true);
-                        }
-                        MusicPlayerApplication.serialization(application.appSet);
-                    }
-
-                    @Override
-                    public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    }
-
-                    @Override
-                    public void onStopTrackingTouch(SeekBar seekBar) {
-
-                    }
-                });
-                new MyDialog(view, this,R.style.NormalDialogStyle);
+                ViewGroup parent1 = (ViewGroup) lrcSetView.getParent();
+                if (parent1 != null) {
+                    parent1.removeView(lrcSetView);
+                }
+                new MyDialog(lrcSetView, this,R.style.NormalDialogStyle);
                 break;
             case R.id.playmv:
                 if (application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHaveMv()==1){
@@ -383,7 +386,23 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(PlayActivity.this,"该歌曲暂时没有mv",Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.lrc_family_zero:
+                setTypeface(Typeface.DEFAULT);
+                application.appSet.setTypeFace(ApplicationTypeFace.DEFAULT);
+                setTypefaceItemBackgroundColor(0);
+                break;
+            case R.id.lrc_family_one:
+                setTypeface(站酷文艺体);
+                application.appSet.setTypeFace(ApplicationTypeFace.站酷文艺体);
+                setTypefaceItemBackgroundColor(1);
+                break;
+            case R.id.lrc_family_two:
+                setTypeface(优设标题黑);
+                application.appSet.setTypeFace(ApplicationTypeFace.优设标题黑);
+                setTypefaceItemBackgroundColor(2);
+                break;
         }
+        MusicPlayerApplication.serialization(application.appSet);
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (event.getAction()) {
@@ -476,12 +495,109 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
      * @param mv mv数据
      */
     public static void saveMV(MV mv,MusicPlayerApplication application) {
-        if (application.appSet.getMvList()==null){
+        if (application.appSet.getMvList() == null) {
             application.appSet.setMvList(new ArrayList<>());
         }
         List<MV> mvList = application.appSet.getMvList();
         mvList.add(mv);
         application.appSet.setMvList(mvList);
-        MusicPlayerApplication.serialization(application.appSet);
+    }
+
+    private void initTypeface(){
+        站酷文艺体=Typeface.createFromAsset(getAssets(), "font/站酷文艺体.ttf");
+        优设标题黑=Typeface.createFromAsset(getAssets(), "font/优设标题黑.ttf");
+        switch (application.appSet.getTypeFace()){
+            case DEFAULT:
+                setTypeface(Typeface.DEFAULT);
+                setTypefaceItemBackgroundColor(0);
+                break;
+            case 站酷文艺体:
+                setTypeface(站酷文艺体);
+                setTypefaceItemBackgroundColor(1);
+                break;
+            case 优设标题黑:
+                setTypeface(优设标题黑);
+                setTypefaceItemBackgroundColor(2);
+                break;
+        }
+    }
+    /**
+     * 设置字体
+     * @param typeface 字体
+     */
+    private void setTypeface(Typeface typeface){
+        krcView.setTypeFace(typeface,true);
+    }
+    private void setTypefaceItemBackgroundColor(int index){
+        for (int i = 0; i < typefaceList.size(); i++) {
+            if (i==index){
+                typefaceList.get(i).setBackgroundResource(R.drawable.typeface_item_background);
+            }else {
+                typefaceList.get(i).setBackgroundResource(R.color.qmui_config_color_10_white);
+            }
+        }
+    }
+    private void initLrcSetView(){
+        lrcSetView = View.inflate(this, R.layout.lrc_set_layout, null);
+        SeekBar lrc_set_lrc_size=lrcSetView.findViewById(R.id.lrc_set_lrc_size);
+        lrc_set_lrc_size.setMax(100);
+        lrc_set_lrc_size.setMin(30);
+        TextView lrc_family_one_text=lrcSetView.findViewById(R.id.lrc_family_one_text);
+        lrc_family_one_text.setTypeface(站酷文艺体);
+        TextView lrc_family_two_text=lrcSetView.findViewById(R.id.lrc_family_two_text);
+        lrc_family_two_text.setTypeface(优设标题黑);
+        CardView lrc_family_zero=lrcSetView.findViewById(R.id.lrc_family_zero);
+        CardView lrc_family_one=lrcSetView.findViewById(R.id.lrc_family_one);
+        CardView lrc_family_two=lrcSetView.findViewById(R.id.lrc_family_two);
+        LinearLayout typeface_item_back_zero = lrcSetView.findViewById(R.id.typeface_item_back_zero);
+        LinearLayout typeface_item_back_one = lrcSetView.findViewById(R.id.typeface_item_back_one);
+        LinearLayout typeface_item_back_two = lrcSetView.findViewById(R.id.typeface_item_back_two);
+        LinearLayout typeface_item_back_three = lrcSetView.findViewById(R.id.typeface_item_back_three);
+        LinearLayout typeface_item_back_four = lrcSetView.findViewById(R.id.typeface_item_back_four);
+        typefaceList=new ArrayList<>();
+        typefaceList.add(typeface_item_back_zero);
+        typefaceList.add(typeface_item_back_one);
+        typefaceList.add(typeface_item_back_two);
+        typefaceList.add(typeface_item_back_three);
+        typefaceList.add(typeface_item_back_four);
+        lrc_large=lrcSetView.findViewById(R.id.lrc_large);
+        lrc_large.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    //Todo
+                    krcView.setSize(application.appSet.getLrc_set_lrc_size()+20,application.appSet.getLrc_set_lrc_size(),true);
+                    krcView.setSpaceLineHeight(application.appSet.getLrc_set_lrc_size()+20,true);
+                }else {
+                    //Todo
+                    krcView.setSize(application.appSet.getLrc_set_lrc_size(),application.appSet.getLrc_set_lrc_size(),true);
+                    krcView.setSpaceLineHeight(application.appSet.getLrc_set_lrc_size(),true);
+                }
+            }
+        });
+        lrc_family_zero.setOnClickListener(this);
+        lrc_family_one.setOnClickListener(this);
+        lrc_family_two.setOnClickListener(this);
+        lrc_set_lrc_size.setProgress(application.appSet.getLrc_set_lrc_size());
+        lrc_set_lrc_size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    application.appSet.setLrc_set_lrc_size(progress);
+                    krcView.setSize(progress,progress,true);
+                    MusicPlayerApplication.serialization(application.appSet);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 }

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:background="@drawable/shape"
+              android:clickable="true"
+              android:layout_gravity="bottom"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content">
+    <ImageView android:layout_width="45dp" android:layout_height="45dp"
+               android:layout_marginStart="20dp"
+               android:src="@drawable/recode"
+               android:layout_gravity="center_vertical"
+               android:id="@+id/recode"/>
+    <LinearLayout android:layout_width="150dp" android:layout_height="60dp"
+                  android:layout_marginStart="10dp"
+                  android:id="@+id/music_singer_name"
+                  android:gravity="center_vertical"
+                  android:orientation="vertical">
+        <TextView android:layout_width="150dp" android:layout_height="wrap_content"
+                  android:id="@+id/currentPlayMusicName"
+                  android:textColor="#000000"
+                  android:text="MusicPlayer"
+                  android:singleLine="true"/>
+        <TextView android:layout_width="150dp" android:layout_height="wrap_content"
+                  android:id="@+id/singerName"
+                  android:textSize="13.5sp"
+                  android:text="未知歌手"
+                  android:singleLine="true"/>
+    </LinearLayout>
+
+    <ImageView android:layout_width="20dp" android:layout_height="20dp"
+               android:id="@+id/play"
+               android:layout_weight="0.2"
+               android:layout_gravity="center_vertical"
+               android:src="@drawable/play"
+               android:background="#0000"/>
+    <ImageView android:layout_width="20dp" android:layout_height="20dp"
+               android:id="@+id/next"
+               android:src="@drawable/next"
+               android:layout_gravity="center_vertical"
+               android:background="#0000"
+               android:layout_weight="0.2"/>
+    <ImageView android:layout_width="20dp" android:layout_height="20dp"
+               android:id="@+id/playlist"
+               android:layout_gravity="center_vertical"
+               android:src="@drawable/musiclist"
+               android:layout_weight="0.2"/>
+</LinearLayout>

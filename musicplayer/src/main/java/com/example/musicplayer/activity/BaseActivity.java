@@ -7,10 +7,9 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -21,6 +20,8 @@ import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.commons.MusicService;
 import com.example.musicplayer.commons.MusicServiceConnect;
 import com.example.musicplayer.util.AnimatorUtil;
+import com.example.musicplayer.util.ButtonUtils;
+import jp.wasabeef.glide.transformations.internal.Utils;
 
 import java.util.Objects;
 
@@ -69,6 +70,22 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * 当前音乐名
      */
     protected TextView currentPlayMusicName;
+    /**
+     * 歌手名
+     */
+    protected TextView singerName;
+    /**
+     * 歌曲名和歌手名视图
+     */
+    protected LinearLayout music_singer_name;
+    /**
+     * 放大动画
+     */
+    protected Animation bigAnimation;
+    /**
+     * 缩小动画
+     */
+    protected Animation smallAnimation;
     /**
      * 播放列表视图
      */
@@ -152,8 +169,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
+        if (ButtonUtils.isFastClick()) {
+            return;
+        }
         switch (v.getId()) {
-            case R.id.currentPlayMusicName://当前播放歌曲名
+            case R.id.music_singer_name://当前播放歌曲名
             case R.id.recode://唱片
                 //跳转去歌词页面
                 startActivity(PlayActivity.class);
@@ -241,14 +261,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         playlist = findViewById(R.id.playlist);
         dialogView = View.inflate(this, R.layout.dialog_bottom, null);
         animator = AnimatorUtil.build(recode);
+        music_singer_name=findViewById(R.id.music_singer_name);
+        singerName=findViewById(R.id.singerName);
         currentPlayMusicName = findViewById(R.id.currentPlayMusicName);
         musics = dialogView.findViewById(R.id.musics);
+        bigAnimation= AnimationUtils.loadAnimation(this,R.anim.image_big);
+        smallAnimation=AnimationUtils.loadAnimation(this,R.anim.image_small);
         loadImage();
         play.setOnClickListener(this);
         next.setOnClickListener(this);
         recode.setOnClickListener(this);
         playlist.setOnClickListener(this);
-        currentPlayMusicName.setOnClickListener(this);
+        music_singer_name.setOnClickListener(this);
         adapter = new MusicListAdapter(this, application);
         musics.setAdapter(adapter);
         adapter.setIndex(application.appSet.getCurrentPlayPosition());
@@ -257,9 +281,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             animator.start();
         });
         if (application.appSet.getCurrentPlayPosition() != -1) {
-            currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
-        } else {
-            currentPlayMusicName.setText("MusicPlayer");
+            currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName());
+            singerName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
         }
         if (application.isPlaying) {
             play.setImageResource(R.drawable.pause);
@@ -291,10 +314,19 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     play.setImageResource(R.drawable.pause);
                     break;
                 case UPDATE_UI:
-                    currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "\n" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
+                    currentPlayMusicName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName());
+                    singerName.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
                     loadImage();
                     adapter.setIndex(application.appSet.getCurrentPlayPosition());
                     adapter.notifyDataSetChanged();
+                    break;
+                case IMAGE_BIG:
+                    recode.clearAnimation();
+                    recode.startAnimation(bigAnimation);
+                    break;
+                case IMAGE_SMALL:
+                    recode.clearAnimation();
+                    recode.startAnimation(smallAnimation);
                     break;
             }
         });
@@ -304,10 +336,13 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      * 通过网络资源加载圆形图片
      */
     protected void loadImage() {
+        if (application.appSet==null)return;
         if (application.appSet.getCurrentPlayPosition() == -1) return;
         Glide.with(this)
                 .load(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getImg())
                 .apply(mRequestOptions)
                 .into(recode);
+
     }
+
 }

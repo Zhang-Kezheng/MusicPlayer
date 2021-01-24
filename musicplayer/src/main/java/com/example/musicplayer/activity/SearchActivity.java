@@ -56,7 +56,7 @@ public class SearchActivity extends BaseActivity {
     private TextView search_local_title;
     private TextView search_online_title;
     private RecentSingleMusicAdapter localTipsAdapter;
-    private LinearLayout backs;
+    private ImageButton backs;
     private Button search_button;
     private ImageView search_history_delete;
 

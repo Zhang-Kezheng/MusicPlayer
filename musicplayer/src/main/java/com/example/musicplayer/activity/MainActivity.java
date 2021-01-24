@@ -25,6 +25,8 @@ import com.example.musicplayer.commons.MusicServiceConnect;
 import com.example.musicplayer.util.AnimatorUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
@@ -55,7 +57,7 @@ public class MainActivity extends BaseActivity {
      */
     private TextView my_title;
     /**
-     * 发线
+     * 发现
      */
     private TextView discover_title;
     /**
@@ -108,6 +110,12 @@ public class MainActivity extends BaseActivity {
      */
     private ImageView search;
 
+    private TextView day;
+
+    private TextView month;
+
+    private TextView week;
+
     @Override
     public void setContentLayout() {
         setContentView(R.layout.activity_main);
@@ -134,6 +142,9 @@ public class MainActivity extends BaseActivity {
         recent = my.findViewById(R.id.recent);
         collect = my.findViewById(R.id.collect);
         search = my.findViewById(R.id.search);
+        day=my.findViewById(R.id.day);
+        month=my.findViewById(R.id.month);
+        week=my.findViewById(R.id.week);
         recent_music_count = my.findViewById(R.id.recent_music_count);
         my_collect_count = my.findViewById(R.id.my_collect_count);
         pages = new ArrayList<>();
@@ -152,6 +163,9 @@ public class MainActivity extends BaseActivity {
         recent.setOnClickListener(this);
         collect.setOnClickListener(this);
         search.setOnClickListener(this);
+        day.setText(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)+"");
+        month.setText(monthFormat(Calendar.getInstance().get(Calendar.MONTH)));
+        week.setText(weekFormat(Calendar.getInstance().get(Calendar.DAY_OF_WEEK)));
         if (application.appSet.getRecentPlay() != null) {
             recent_music_count.setText(application.appSet.getRecentPlay().size() + "");
         }
@@ -255,4 +269,85 @@ public class MainActivity extends BaseActivity {
         startActivity(home);
     }
 
+    /**
+     * 月份格式化
+     * @param month 月份
+     * @return 英文的月份缩写
+     */
+    private String monthFormat(int month){
+        String monthStr=null;
+        switch (month+1){
+            case 1:
+                monthStr="JAN";
+                break;
+            case 2:
+                monthStr="FEB";
+                break;
+            case 3:
+                monthStr="MAR";
+                break;
+            case 4:
+                monthStr="APR";
+                break;
+            case 5:
+                monthStr="MAY";
+                break;
+            case 6:
+                monthStr="JUN";
+                break;
+            case 7:
+                monthStr="JUL";
+                break;
+            case 8:
+                monthStr="AUG";
+                break;
+            case 9:
+                monthStr="SEP";
+                break;
+            case 10:
+                monthStr="OCT";
+                break;
+            case 11:
+                monthStr="NOV";
+                break;
+            case 12:
+                monthStr="DEC";
+                break;
+
+        }
+        return monthStr;
+    }
+
+    /**
+     * 星期格式化
+     * @param day_of_week 一天在一星期的第几天
+     * @return 汉字的周几
+     */
+    private String weekFormat(int day_of_week){
+        String weekStr=null;
+        switch (day_of_week-1){
+            case 1:
+                weekStr="周一";
+                break;
+            case 2:
+                weekStr="周二";
+                break;
+            case 3:
+                weekStr="周三";
+                break;
+            case 4:
+                weekStr="周四";
+                break;
+            case 5:
+                weekStr="周五";
+                break;
+            case 6:
+                weekStr="周六";
+                break;
+            case 7:
+                weekStr="周日";
+                break;
+        }
+        return weekStr;
+    }
 }

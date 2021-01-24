@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
+import static com.example.musicplayer.commons.MusicPlayerApplication.UPDATE_UI;
 
 public class RecentActivity extends BaseActivity {
     private RecentSingleMusicAdapter recentSingleMusicAdapter;
@@ -188,7 +189,14 @@ public class RecentActivity extends BaseActivity {
     private void init_single_music_page(@NotNull View view) {
         ListView recent_single_music_list = view.findViewById(R.id.recent_single_music_list);
         recentSingleMusicAdapter = new RecentSingleMusicAdapter(this, application.appSet.getRecentPlay());
-        recentSingleMusicAdapter.setIndex(0);
+        String currentMusicHash = application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash();
+        for (int i = 0; i < application.appSet.getRecentPlay().size(); i++) {
+            String hash = application.appSet.getRecentPlay().get(i).getMusicPlayUrlData().getData().getHash();
+            if (hash.equals(currentMusicHash)){
+                recentSingleMusicAdapter.setIndex(i);
+                break;
+            }
+        }
         recent_single_music_list.setAdapter(recentSingleMusicAdapter);
         recent_single_music_list.setOnItemClickListener((parent, view1, position, id) -> {
             recentSingleMusicAdapter.setIndex(position);
@@ -212,6 +220,25 @@ public class RecentActivity extends BaseActivity {
             intent.putExtra("mv", mv);
             startActivity(intent);
         });
+
     }
 
+    @Override
+    public void update(int command) {
+        super.update(command);
+            if (command==UPDATE_UI){
+                recentSingleMusicAdapter.setIndex(getCurrentMusicIndex());
+                recentSingleMusicAdapter.notifyDataSetChanged();
+            }
+    }
+    private int getCurrentMusicIndex(){
+        String currentMusicHash = application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getHash();
+        for (int i = 0; i < application.appSet.getRecentPlay().size(); i++) {
+            String hash = application.appSet.getRecentPlay().get(i).getMusicPlayUrlData().getData().getHash();
+            if (hash.equals(currentMusicHash)){
+                return i;
+            }
+        }
+        return -1;
+    }
 }

@@ -72,6 +72,7 @@ public class MusicService extends Service implements Subject, Observer {
         });
         player.setOnErrorListener((mp, what, extra) -> true);
         player.setOnPreparedListener(mp -> {
+            notifyObservers(IMAGE_BIG);
             mp.start();
             running = true;
             addTimer();
@@ -273,6 +274,7 @@ public class MusicService extends Service implements Subject, Observer {
 
         //切换音乐
         public void changeMusic(int position) {
+            notifyObservers(IMAGE_SMALL);
             player.stop();
             running = false;
             player.reset();
@@ -310,10 +312,12 @@ public class MusicService extends Service implements Subject, Observer {
             if (player.isPlaying()) {
                 player.pause();
                 notifyObservers(PAUSE);
+                notifyObservers(IMAGE_SMALL);
                 application.isPlaying=false;
             } else {
                 player.start();
                 notifyObservers(PLAY);
+                notifyObservers(IMAGE_BIG);
                 application.isPlaying=true;
             }
             notifyObservers(UPDATE_UI);
@@ -323,20 +327,20 @@ public class MusicService extends Service implements Subject, Observer {
          * 下一首
          */
         public void next() {
-            switch (application.appSet.getCurrentMode()) {
-                case "随机播放":
-                    Random random = new Random();
-                    application.appSet.setCurrentPlayPosition( random.nextInt(application.musicInfos.size()));
+            switch (application.appSet.getPlayMode()){
+                case SingleCycle:
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
-                case "列表循环":
+                case ListLoop:
                     application.appSet.setCurrentPlayPosition(application.appSet.getCurrentPlayPosition()+1);
                     if (application.appSet.getCurrentPlayPosition() > application.musicInfos.size() - 1) {
                         application.appSet.setCurrentPlayPosition(0);
                     }
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
-                case "单曲循环":
+                case ShufflePlayback:
+                    Random random = new Random();
+                    application.appSet.setCurrentPlayPosition( random.nextInt(application.musicInfos.size()));
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
             }
@@ -347,13 +351,13 @@ public class MusicService extends Service implements Subject, Observer {
          * 上一首
          */
         public void pre() {
-            switch (application.appSet.getCurrentMode()) {
-                case "随机播放":
+            switch (application.appSet.getPlayMode()) {
+                case ShufflePlayback:
                     Random random = new Random();
                     application.appSet.setCurrentPlayPosition(random.nextInt(application.musicInfos.size()));
                     changeMusic(application.appSet.getCurrentPlayPosition());
                     break;
-                case "列表循环":
+                case ListLoop:
                     application.appSet.setCurrentPlayPosition(application.appSet.getCurrentPlayPosition()-1);
                     if (application.appSet.getCurrentPlayPosition() < 0) {
                         application.appSet.setCurrentPlayPosition(application.musicInfos.size()-1);

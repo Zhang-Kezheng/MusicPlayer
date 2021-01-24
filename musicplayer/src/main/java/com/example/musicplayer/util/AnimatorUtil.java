@@ -1,7 +1,9 @@
 package com.example.musicplayer.util;
 
 import android.animation.ObjectAnimator;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 /**

@@ -4,14 +4,11 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import androidx.multidex.MultiDex;
 import com.example.musicplayer.model.user.MusicInfo;
-import com.example.musicplayer.set.Search_history;
-import org.litepal.LitePal;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlayerApplication extends Application {
@@ -37,6 +34,8 @@ public class MusicPlayerApplication extends Application {
     public final static int CHANGE_LRC=-6;
     public final static int SEARCH_HOT=-7;
     public final static int SEARCH_TIPS=-8;
+    public final static int IMAGE_BIG=-9;
+    public final static int IMAGE_SMALL=-10;
     @Override
     public void onCreate() {
         super.onCreate();
