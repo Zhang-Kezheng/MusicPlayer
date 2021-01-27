@@ -72,7 +72,6 @@ public class MusicService extends Service implements Subject, Observer {
         });
         player.setOnErrorListener((mp, what, extra) -> true);
         player.setOnPreparedListener(mp -> {
-            notifyObservers(IMAGE_BIG);
             mp.start();
             running = true;
             addTimer();
@@ -274,7 +273,6 @@ public class MusicService extends Service implements Subject, Observer {
 
         //切换音乐
         public void changeMusic(int position) {
-            notifyObservers(IMAGE_SMALL);
             player.stop();
             running = false;
             player.reset();
@@ -312,12 +310,10 @@ public class MusicService extends Service implements Subject, Observer {
             if (player.isPlaying()) {
                 player.pause();
                 notifyObservers(PAUSE);
-                notifyObservers(IMAGE_SMALL);
                 application.isPlaying=false;
             } else {
                 player.start();
                 notifyObservers(PLAY);
-                notifyObservers(IMAGE_BIG);
                 application.isPlaying=true;
             }
             notifyObservers(UPDATE_UI);

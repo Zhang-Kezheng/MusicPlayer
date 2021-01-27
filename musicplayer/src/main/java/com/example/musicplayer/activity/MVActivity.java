@@ -32,7 +32,7 @@ import com.example.musicplayer.model.mv.greatcount.GreatCount;
 import com.example.musicplayer.model.mv.greatcount.GreatStatus;
 import com.example.musicplayer.model.mv.playurl.*;
 import com.example.musicplayer.model.mv.recommend.MVRecommend;
-import com.example.musicplayer.pageview.WrapContentHeightViewPager;
+import com.example.musicplayer.view.WrapContentHeightViewPager;
 import com.example.musicplayer.util.HttpUtil;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.gson.Gson;

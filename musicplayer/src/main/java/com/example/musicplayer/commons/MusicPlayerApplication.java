@@ -34,8 +34,6 @@ public class MusicPlayerApplication extends Application {
     public final static int CHANGE_LRC=-6;
     public final static int SEARCH_HOT=-7;
     public final static int SEARCH_TIPS=-8;
-    public final static int IMAGE_BIG=-9;
-    public final static int IMAGE_SMALL=-10;
     @Override
     public void onCreate() {
         super.onCreate();

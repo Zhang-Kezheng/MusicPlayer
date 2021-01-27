@@ -1,6 +1,7 @@
 package com.example.musicplayer.commons;
 
 
+import android.graphics.Color;
 import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.set.ApplicationTypeFace;
@@ -31,7 +32,16 @@ public class AppSet  extends LitePalSupport implements Serializable {
     private Map<String,List<MusicInfo>> songList;//歌单，默认存在我喜欢歌单和最近播放歌单
     private String currentSongList="最近播放";
     private List<String> search_history=new ArrayList<>();//播放历史
-    private ApplicationTypeFace typeFace=ApplicationTypeFace.DEFAULT;
+    private ApplicationTypeFace typeFace=ApplicationTypeFace.DEFAULT;//歌词字体
+    private int lrc_color= Color.RED;//歌词颜色
+
+    public int getLrc_color() {
+        return lrc_color;
+    }
+
+    public void setLrc_color(int lrc_color) {
+        this.lrc_color = lrc_color;
+    }
 
     public ApplicationTypeFace getTypeFace() {
         return typeFace;
@@ -154,4 +164,5 @@ public class AppSet  extends LitePalSupport implements Serializable {
     public void setCollect(List<MusicInfo> collect) {
         this.collect = collect;
     }
+
 }

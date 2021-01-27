@@ -6,5 +6,5 @@ package com.example.musicplayer.set;
  * 应用字体
  */
 public enum ApplicationTypeFace {
-    DEFAULT,站酷文艺体,优设标题黑
+    DEFAULT,站酷文艺体,优设标题黑,华康少女体
 }

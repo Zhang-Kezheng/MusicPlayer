@@ -10,7 +10,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -46,7 +45,6 @@ public class SearchActivity extends BaseActivity {
     private ProgressBar progressBar;//正在搜索
     private LinearLayout search_music;//搜索出来的音乐列表
     private LinearLayout recommend;//推荐歌曲模块
-    private LinearLayout search_recommend;//搜索推荐模块
     private NestedScrollView music_recommend;
     private ConstraintLayout search_tips;
     private NestedScrollView music_list;
@@ -78,7 +76,6 @@ public class SearchActivity extends BaseActivity {
         flexboxLayout = findViewById(R.id.search_history);
         progressBar = findViewById(R.id.progress_bar);
         recommend = findViewById(R.id.recommend);
-        search_recommend = findViewById(R.id.search_recommend);
         music_recommend = findViewById(R.id.music_recommend);
         search_tips = findViewById(R.id.search_tips);
         music_list = findViewById(R.id.music_list);
@@ -452,6 +449,7 @@ public class SearchActivity extends BaseActivity {
         for (String s : search_history) {
             if (s.equals(text)) {
                 isExit = true;
+                break;
             }
         }
         if (!isExit) {

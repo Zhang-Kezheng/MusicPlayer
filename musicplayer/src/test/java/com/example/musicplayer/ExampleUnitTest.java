@@ -1,15 +1,8 @@
 package com.example.musicplayer;
 
-import android.media.AudioManager;
-import android.media.MediaPlayer;
-import com.example.musicplayer.pageview.krc.KrcReader;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.junit.Test;
+import com.example.musicplayer.view.krc.KrcReader;
 
 import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

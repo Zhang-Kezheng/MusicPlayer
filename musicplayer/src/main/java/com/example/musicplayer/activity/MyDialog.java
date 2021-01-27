@@ -3,11 +3,7 @@ package com.example.musicplayer.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.*;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.example.musicplayer.R;
 import com.example.musicplayer.util.ScreenSizeUtils;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @author 章可政
@@ -29,6 +25,5 @@ public class MyDialog extends Dialog {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.BOTTOM;
         dialogWindow.setAttributes(lp);
-        show();
     }
 }

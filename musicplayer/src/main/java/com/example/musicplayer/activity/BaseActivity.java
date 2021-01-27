@@ -21,7 +21,6 @@ import com.example.musicplayer.commons.MusicService;
 import com.example.musicplayer.commons.MusicServiceConnect;
 import com.example.musicplayer.util.AnimatorUtil;
 import com.example.musicplayer.util.ButtonUtils;
-import jp.wasabeef.glide.transformations.internal.Utils;
 
 import java.util.Objects;
 
@@ -180,7 +179,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.play://播放按钮
                 //播放
-                connection.getMusicControl().play();
+                if (application.appSet.getCurrentPlayPosition() == -1) return;
+
+                    connection.getMusicControl().play();
                 break;
             case R.id.next://下一首
                 if (application.appSet.getCurrentPlayPosition() == -1) return;
@@ -254,6 +255,9 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * 初始化公共的视图
+     */
     protected void initCommonView() {
         recode = findViewById(R.id.recode);
         play = findViewById(R.id.play);
@@ -319,14 +323,6 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                     loadImage();
                     adapter.setIndex(application.appSet.getCurrentPlayPosition());
                     adapter.notifyDataSetChanged();
-                    break;
-                case IMAGE_BIG:
-                    recode.clearAnimation();
-                    recode.startAnimation(bigAnimation);
-                    break;
-                case IMAGE_SMALL:
-                    recode.clearAnimation();
-                    recode.startAnimation(smallAnimation);
                     break;
             }
         });

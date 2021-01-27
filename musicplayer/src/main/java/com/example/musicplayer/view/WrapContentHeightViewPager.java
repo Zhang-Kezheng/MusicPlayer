@@ -1,4 +1,4 @@
-package com.example.musicplayer.pageview;
+package com.example.musicplayer.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
