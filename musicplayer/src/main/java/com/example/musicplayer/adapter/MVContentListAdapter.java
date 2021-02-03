@@ -64,44 +64,4 @@ public class MVContentListAdapter extends RecyclerView.Adapter<MVContentListAdap
     public MVContentListAdapter(List<com.example.musicplayer.model.mv.comment.List> data) {
         this.data = data;
     }
-    //    private final LayoutInflater inflater;
-//    private final Context context;
-//
-//    public MVContentListAdapter( Context context,List<com.example.musicplayer.model.mv.comment.List> data) {
-//        this.data = data;
-//        this.context = context;
-//        inflater=LayoutInflater.from(context);
-//    }
-//
-//    @Override
-//    public int getCount() {
-//        if (data==null)return 0;
-//        return data.size();
-//    }
-//
-//    @Override
-//    public Object getItem(int position) {
-//        if (data==null)return 0;
-//        return data.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        @SuppressLint("ViewHolder") View view = inflater.inflate(R.layout.mv_comment_list_item, parent,false);
-//        ImageView mv_comment_user_img=view.findViewById(R.id.mv_comment_user_img);
-//        TextView mv_comment_user_name=view.findViewById(R.id.mv_comment_user_name);
-//        TextView mv_comment_update_date=view.findViewById(R.id.mv_comment_update_date);
-//        TextView mv_comment_content=view.findViewById(R.id.mv_comment_content);
-//        RequestOptions mRequestOptions = RequestOptions.circleCropTransform();
-//        Glide.with(context).load(data.get(position).getUserPic()).apply(mRequestOptions).into(mv_comment_user_img);
-//        mv_comment_user_name.setText(data.get(position).getUserName());
-//        mv_comment_update_date.setText(data.get(position).getAddtime());
-//        mv_comment_content.setText(data.get(position).getContent());
-//        return view;
-//    }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 
 public class CollectActivity extends BaseActivity {
     private CollectSingleMusicAdapter collectSingleMusicAdapter;
-    private ImageView fragment_recent_back;
     private View single_music_page;
     private View song_list_page;
     private View album_page;
@@ -36,7 +35,7 @@ public class CollectActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        fragment_recent_back = findViewById(R.id.fragment_recent_back);
+        ImageView fragment_recent_back = findViewById(R.id.fragment_recent_back);
         fragment_recent_back.setOnClickListener(this);
         collect_list_pager = findViewById(R.id.collect_list_pager);
         views = new ArrayList<>();

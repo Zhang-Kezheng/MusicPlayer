@@ -5,10 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Typeface;
+import android.graphics.*;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.os.*;
 import android.view.*;
@@ -19,10 +18,13 @@ import androidx.cardview.widget.CardView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.musicplayer.*;
+import com.example.musicplayer.Observer;
+import com.example.musicplayer.commons.AppSet;
 import com.example.musicplayer.commons.BlurTransformation;
 import com.example.musicplayer.adapter.MusicListAdapter;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.commons.MusicService;
+import com.example.musicplayer.model.music.searchmusicplayurl.Author;
 import com.example.musicplayer.model.mv.MV;
 import com.example.musicplayer.model.mv.detail.MVDetail;
 import com.example.musicplayer.model.mv.playurl.MVModel;
@@ -30,6 +32,7 @@ import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.set.ApplicationTypeFace;
 import com.example.musicplayer.set.MusicPlayMode;
 import com.example.musicplayer.util.HttpUtil;
+import com.example.musicplayer.util.ImageUtils;
 import com.google.gson.Gson;
 import com.zlm.hp.lyrics.LyricsReader;
 import com.zlm.hp.lyrics.widget.ManyLyricsView;
@@ -38,8 +41,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
 
@@ -77,16 +79,9 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         Window window = getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-                | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(Color.TRANSPARENT);
-        window.setNavigationBarColor(Color.TRANSPARENT);
+        window.setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.play);
         application = (MusicPlayerApplication) getApplication();
         am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -365,10 +360,21 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 setPaintHLColor(Color.parseColor("#FF00FF"));
                 application.appSet.setLrc_color(Color.parseColor("#FF00FF"));
                 break;
+            case R.id.chakangeshou:
+                Intent intent=new Intent(this,SingerActivity.class);
+                List<Author> authors = application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthors();
+                if (authors.size()==1){
+                    intent.putExtra("singerID", authors.get(0).getAuthorId());
+                    startActivity(intent);
+                    myDialog.dismiss();
+                }else {
+                    Toast.makeText(this,"两个歌手",Toast.LENGTH_SHORT).show();
+                    myDialog.dismiss();
+                }
+                break;
         }
         MusicPlayerApplication.serialization(application.appSet);
     }
-
     /**
      * 切换选中的高亮歌词颜色的图片
      *
@@ -665,12 +671,21 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
      * 初始化播放设置视图
      */
     private void initPlaySetView() {
+        if (application.appSet.getCurrentMusic()==null)return;
         View set = View.inflate(this, R.layout.play_set_view, null);
         Button play_set_close_button = set.findViewById(R.id.play_set_close_button);
         play_set_close_button.setOnClickListener(this);
         TextView play_set_music_title = set.findViewById(R.id.play_set_music_title);
         play_set_music_title.setText(application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getSongName() + "-" + application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthorName());
         play_volume = set.findViewById(R.id.play_volume);
+        ImageView chakangeshou=set.findViewById(R.id.chakangeshou);
+        chakangeshou.setOnClickListener(this);
+        String avatar = application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getAuthors().get(0).getAvatar();
+        ImageUtils.setImageCircle(this,chakangeshou,avatar);
+        ImageView chakanzhuanji=set.findViewById(R.id.chakanzhuanji);
+        String image = application.appSet.getCurrentMusic().getMusicPlayUrlData().getData().getImg();
+        ImageUtils.setImageCircle(this,chakanzhuanji,image);
+        chakanzhuanji.setOnClickListener(this);
         int max = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);// 3
         current = am.getStreamVolume(AudioManager.STREAM_MUSIC);
         play_volume.setMax(max);

@@ -19,9 +19,12 @@ import com.example.musicplayer.adapter.MusicListAdapter;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.commons.MusicService;
 import com.example.musicplayer.commons.MusicServiceConnect;
+import com.example.musicplayer.model.user.MusicInfo;
 import com.example.musicplayer.util.AnimatorUtil;
 import com.example.musicplayer.util.ButtonUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static com.example.musicplayer.commons.MusicPlayerApplication.*;
@@ -98,10 +101,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
      */
     protected MusicListAdapter adapter;
     /**
-     * 弹窗
+     * 弹窗视图
      */
     protected View dialogView;
 
+    protected MyDialog playlistDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,11 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 animator.start();
                 break;
             case R.id.playlist://播放列表
-                ViewGroup parent = (ViewGroup) dialogView.getParent();
-                if (parent != null) {
-                    parent.removeView(dialogView);
-                }
-                new MyDialog(dialogView, this, R.style.NormalDialogStyle);
+                playlistDialog.show();
                 break;
         }
         onClickEvent(v);
@@ -263,12 +263,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         play = findViewById(R.id.play);
         next = findViewById(R.id.next);
         playlist = findViewById(R.id.playlist);
-        dialogView = View.inflate(this, R.layout.dialog_bottom, null);
         animator = AnimatorUtil.build(recode);
         music_singer_name=findViewById(R.id.music_singer_name);
         singerName=findViewById(R.id.singerName);
         currentPlayMusicName = findViewById(R.id.currentPlayMusicName);
-        musics = dialogView.findViewById(R.id.musics);
         bigAnimation= AnimationUtils.loadAnimation(this,R.anim.image_big);
         smallAnimation=AnimationUtils.loadAnimation(this,R.anim.image_small);
         loadImage();
@@ -277,6 +275,11 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         recode.setOnClickListener(this);
         playlist.setOnClickListener(this);
         music_singer_name.setOnClickListener(this);
+        initDialogView();
+    }
+    private void initDialogView(){
+        dialogView = View.inflate(this, R.layout.dialog_bottom, null);
+        musics = dialogView.findViewById(R.id.musics);
         adapter = new MusicListAdapter(this, application);
         musics.setAdapter(adapter);
         adapter.setIndex(application.appSet.getCurrentPlayPosition());
@@ -295,8 +298,8 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
             play.setImageResource(R.drawable.play);
             animator.pause();
         }
+        playlistDialog=new MyDialog(dialogView, this, R.style.NormalDialogStyle);
     }
-
     @Override
     public void update(int command) {
         runOnUiThread(() -> {
@@ -340,5 +343,54 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
                 .into(recode);
 
     }
+    protected void playMusic(MusicInfo currentMusic) {
 
+        if (currentMusic.getMusicPlayUrlData() != null) {
+            if ("".equals(currentMusic.getMusicPlayUrlData().getData().getPlayUrl())) {
+                showToast("暂无资源");
+                return;
+            }
+            if (currentMusic.getMusicPlayUrlData().getData().getTransParam() != null) {
+                showToast("该歌曲为付费歌曲，暂不支持播放");
+                return;
+            }
+            //frag检查该歌曲是否存在于播放列表，若不存在则添加进播放列表，若存在则不添加使用播放列表的歌曲信息
+            boolean flag = false;
+            if (application.musicInfos != null) {
+                for (MusicInfo musicinfo : application.musicInfos) {
+                    if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
+                        flag = true;
+                        application.appSet.setCurrentPlayPosition(application.musicInfos.indexOf(musicinfo));
+                        break;
+                    }
+                }
+            }
+            if (!flag) {
+                if (application.musicInfos == null) application.musicInfos = new ArrayList<>();//如果歌单为空的话，新建
+                application.musicInfos.add(currentMusic);//将歌曲信息添加进歌单中
+                application.appSet.setCurrentPlayPosition(application.musicInfos.size() - 1);
+            }
+            List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
+            if (recentPlay == null) {
+                recentPlay = new ArrayList<>();
+                recentPlay.add(currentMusic);
+                application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
+            } else {
+                boolean isExist = false;
+                for (MusicInfo musicinfo : recentPlay) {
+                    if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
+                        isExist = true;
+                        break;
+                    }
+                }
+                if (!isExist) {
+                    recentPlay.add(currentMusic);
+                    application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
+                }
+            }
+            connection.getMusicControl().changeMusic(application.appSet.getCurrentPlayPosition());
+            MusicPlayerApplication.serialization(application.appSet);
+
+        }
+    }
 }

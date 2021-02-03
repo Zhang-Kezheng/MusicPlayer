@@ -10,14 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.musicplayer.R;
-import com.example.musicplayer.activity.PlayActivity;
 import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.model.user.MusicInfo;
+import com.example.musicplayer.util.HttpUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 /**

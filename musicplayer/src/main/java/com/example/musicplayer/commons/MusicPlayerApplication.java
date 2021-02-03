@@ -34,6 +34,8 @@ public class MusicPlayerApplication extends Application {
     public final static int CHANGE_LRC=-6;
     public final static int SEARCH_HOT=-7;
     public final static int SEARCH_TIPS=-8;
+    public final static int GET_SINGER_INFO=-9;
+    public final static int GET_SINGER_SINGLE_MUSIC=-10;
     @Override
     public void onCreate() {
         super.onCreate();

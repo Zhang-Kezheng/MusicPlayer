@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.example.musicplayer.R;
-import com.example.musicplayer.commons.MusicPlayerApplication;
 import com.example.musicplayer.model.user.MusicInfo;
 
 import java.util.List;

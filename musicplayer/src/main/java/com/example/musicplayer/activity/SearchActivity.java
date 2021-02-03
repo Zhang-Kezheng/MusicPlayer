@@ -143,6 +143,9 @@ public class SearchActivity extends BaseActivity {
 
     }
 
+    /**
+     * 初始化搜索历史
+     */
     private void initSearchHistory() {
         flexboxLayout.removeAllViews();
         List<String> search_history = application.appSet.getSearch_history();
@@ -155,6 +158,10 @@ public class SearchActivity extends BaseActivity {
             flexboxLayout.addView(view);
         }
     }
+
+    /**
+     * 删除搜索历史
+     */
     private void deleteSearchHistory(){
         flexboxLayout.removeAllViews();
         List<String> search_history = application.appSet.getSearch_history();
@@ -375,56 +382,6 @@ public class SearchActivity extends BaseActivity {
         return false;
     };
 
-    private void playMusic(MusicInfo currentMusic) {
-
-        if (currentMusic.getMusicPlayUrlData() != null) {
-            if ("".equals(currentMusic.getMusicPlayUrlData().getData().getPlayUrl())) {
-                showToast("暂无资源");
-                return;
-            }
-            if (currentMusic.getMusicPlayUrlData().getData().getTransParam() != null) {
-                showToast("该歌曲为付费歌曲，暂不支持播放");
-                return;
-            }
-            //frag检查该歌曲是否存在于播放列表，若不存在则添加进播放列表，若存在则不添加使用播放列表的歌曲信息
-            boolean flag = false;
-            if (application.musicInfos != null) {
-                for (MusicInfo musicinfo : application.musicInfos) {
-                    if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
-                        flag = true;
-                        application.appSet.setCurrentPlayPosition(application.musicInfos.indexOf(musicinfo));
-                        break;
-                    }
-                }
-            }
-            if (!flag) {
-                if (application.musicInfos == null) application.musicInfos = new ArrayList<>();//如果歌单为空的话，新建
-                application.musicInfos.add(currentMusic);//将歌曲信息添加进歌单中
-                application.appSet.setCurrentPlayPosition(application.musicInfos.size() - 1);
-            }
-            List<MusicInfo> recentPlay = application.appSet.getRecentPlay();
-            if (recentPlay == null) {
-                recentPlay = new ArrayList<>();
-                recentPlay.add(currentMusic);
-                application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
-            } else {
-                boolean isExist = false;
-                for (MusicInfo musicinfo : recentPlay) {
-                    if (musicinfo.getMusicPlayUrlData().getData().getHash().equals(currentMusic.getMusicPlayUrlData().getData().getHash())) {
-                        isExist = true;
-                        break;
-                    }
-                }
-                if (!isExist) {
-                    recentPlay.add(currentMusic);
-                    application.appSet.setRecentPlay(recentPlay);//将当前歌曲添加进最近播放列表中
-                }
-            }
-            connection.getMusicControl().changeMusic(application.appSet.getCurrentPlayPosition());
-            MusicPlayerApplication.serialization(application.appSet);
-
-        }
-    }
 
     /**
      * 搜索歌曲

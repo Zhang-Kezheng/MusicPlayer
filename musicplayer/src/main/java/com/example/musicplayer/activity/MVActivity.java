@@ -52,7 +52,7 @@ public class MVActivity extends AppCompatActivity implements View.OnClickListene
     private JzvdStd mv;//视频组件
     private MVModel mvModel;//mv模型
     private MVDetail mvDetail;//mv详情
-    private WrapContentHeightViewPager mv_pager;
+    private ViewPager mv_pager;
     private View mv_detail_page;//mv详情页
     private View mv_comment_page;//mv评论页
     public static final int GET_RECOMMEND_VIDEO = 1;//获取视频推荐

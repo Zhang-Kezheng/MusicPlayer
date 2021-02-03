@@ -1,139 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:paddingStart="10dp"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" tools:ignore="RtlSymmetry">
-
-    <LinearLayout android:layout_width="match_parent" android:layout_height="100dp"
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:orientation="vertical">
-        <TextView
-                android:text="巴赫旧约"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/mv_name"
-                android:textStyle="bold" android:textColor="#121111" android:textSize="16sp"/>
-        <com.google.android.flexbox.FlexboxLayout android:layout_width="match_parent" android:layout_height="50dp"
-                                                  android:layout_marginTop="10dp"
-                                                  app:flexWrap="wrap"
-                                                  android:id="@+id/mv_tags"
-                                                  android:orientation="horizontal">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="100dp"
+                      android:orientation="vertical">
+            <TextView
+                    android:text="巴赫旧约"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/mv_name"
+                    android:textStyle="bold" android:textColor="#121111" android:textSize="16sp"/>
+            <com.google.android.flexbox.FlexboxLayout android:layout_width="match_parent" android:layout_height="50dp"
+                                                      android:layout_marginTop="10dp"
+                                                      app:flexWrap="wrap"
+                                                      android:id="@+id/mv_tags"
+                                                      android:orientation="horizontal">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:textSize="10sp"
+                          android:id="@+id/mv_heat"
+                          android:text="50.3万次播放" tools:ignore="SmallSp"/>
+            </com.google.android.flexbox.FlexboxLayout>
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                       android:textSize="10sp"
-                      android:id="@+id/mv_heat"
-                      android:text="50.3万次播放" tools:ignore="SmallSp"/>
-        </com.google.android.flexbox.FlexboxLayout>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:textSize="10sp"
-                  android:text="10"
-                  android:id="@+id/mv_public" tools:ignore="SmallSp"/>
-    </LinearLayout>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="50dp"
-                  android:layout_marginTop="10dp"
-                  android:orientation="horizontal">
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:layout_weight="1"
-                      android:orientation="vertical">
-            <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                       android:id="@+id/mv_great_img"
-                       android:src="@drawable/mv_ungreat"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/mv_great_count"
-                      android:gravity="center_horizontal"
-                      android:text="2213"/>
+                      android:text="10"
+                      android:id="@+id/mv_public" tools:ignore="SmallSp"/>
         </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:layout_weight="1"
-                      android:orientation="vertical">
-            <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                       android:id="@+id/mv_download_img"
-                       android:src="@drawable/mv_download"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/mv_download_count"
-                      android:gravity="center_horizontal"
-                      android:text="2213"/>
-        </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:layout_weight="1"
-                      android:orientation="vertical">
-            <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                       android:id="@+id/mv_like_img"
-                       android:src="@drawable/mv_unlike"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:id="@+id/mv_like_count"
-                      android:gravity="center_horizontal"
-                      android:text="2213"/>
-        </LinearLayout>
-        <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:layout_weight="1"
-                      android:orientation="vertical">
-            <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                       android:id="@+id/mv_share_img"
-                       android:src="@drawable/mv_share"/>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                      android:gravity="center_horizontal"
-                      android:text="分享"/>
-        </LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="50dp"
+                      android:layout_marginTop="10dp"
+                      android:orientation="horizontal">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                          android:gravity="center"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+                <ImageView android:layout_width="30dp" android:layout_height="30dp"
+                           android:id="@+id/mv_great_img"
+                           android:src="@drawable/mv_ungreat"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:id="@+id/mv_great_count"
+                          android:gravity="center_horizontal"
+                          android:text="2213"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                          android:gravity="center"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+                <ImageView android:layout_width="30dp" android:layout_height="30dp"
+                           android:id="@+id/mv_download_img"
+                           android:src="@drawable/mv_download"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:id="@+id/mv_download_count"
+                          android:gravity="center_horizontal"
+                          android:text="2213"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                          android:gravity="center"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+                <ImageView android:layout_width="30dp" android:layout_height="30dp"
+                           android:id="@+id/mv_like_img"
+                           android:src="@drawable/mv_unlike"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:id="@+id/mv_like_count"
+                          android:gravity="center_horizontal"
+                          android:text="2213"/>
+            </LinearLayout>
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent"
+                          android:gravity="center"
+                          android:layout_weight="1"
+                          android:orientation="vertical">
+                <ImageView android:layout_width="30dp" android:layout_height="30dp"
+                           android:id="@+id/mv_share_img"
+                           android:src="@drawable/mv_share"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                          android:gravity="center_horizontal"
+                          android:text="分享"/>
+            </LinearLayout>
 
-    </LinearLayout>
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
-        <ImageView android:layout_width="30dp" android:layout_height="30dp"
-                   android:id="@+id/singer_head_img"/>
+        </LinearLayout>
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp">
+            <ImageView android:layout_width="30dp" android:layout_height="30dp"
+                       android:id="@+id/singer_head_img"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                      android:layout_toEndOf="@+id/singer_head_img"
+                      android:layout_marginStart="3dp"
+                      android:id="@+id/singername"/>
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:background="@drawable/mv_tag_button"
+                      android:textSize="12sp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="10dp"
+                    android:text="+ 关注"/>
+        </RelativeLayout>
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="25dp">
+            <TextView
+                    android:text="视频歌曲"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/mv_music"
+                    android:textStyle="bold" android:textColor="#121111" android:textSize="16sp"/>
+            <ImageView android:layout_width="50dp" android:layout_height="50dp"
+                       android:id="@+id/mv_music_img"
+                       android:layout_below="@+id/mv_music"
+                       android:layout_marginTop="10dp"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="50dp"
+                          android:orientation="vertical"
+                          android:gravity="center_vertical"
+                          android:layout_alignTop="@+id/mv_music_img"
+                          android:layout_toEndOf="@+id/mv_music_img">
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                  android:layout_toEndOf="@+id/singer_head_img"
-                  android:layout_marginStart="3dp"
-                  android:id="@+id/singername"/>
+                  android:id="@+id/mv_music_musicname"
+                  android:textColor="#121111"
+                  android:layout_marginStart="5dp"/>
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:background="@drawable/mv_tag_button"
+                  android:layout_marginTop="3dp"
                   android:textSize="12sp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="10dp"
-                android:text="+ 关注"/>
-    </RelativeLayout>
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                    android:layout_marginTop="25dp">
+                  android:layout_marginStart="5dp"
+                  android:id="@+id/mv_music_singername"/>
+            </LinearLayout>
+        </RelativeLayout>
         <TextView
-                android:text="视频歌曲"
+                android:text="相关推荐"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/mv_music"
+                android:id="@+id/mv_related_suggestion"
+                android:layout_marginTop="35dp"
                 android:textStyle="bold" android:textColor="#121111" android:textSize="16sp"/>
-        <ImageView android:layout_width="50dp" android:layout_height="50dp"
-                   android:id="@+id/mv_music_img"
-                   android:layout_below="@+id/mv_music"
-                   android:layout_marginTop="10dp"/>
-        <LinearLayout android:layout_width="match_parent" android:layout_height="50dp"
-                      android:orientation="vertical"
-                      android:gravity="center_vertical"
-                      android:layout_alignTop="@+id/mv_music_img"
-                      android:layout_toEndOf="@+id/mv_music_img">
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/mv_music_musicname"
-              android:textColor="#121111"
-              android:layout_marginStart="5dp"/>
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_marginTop="3dp"
-              android:textSize="12sp"
-              android:layout_marginStart="5dp"
-              android:id="@+id/mv_music_singername"/>
-        </LinearLayout>
-    </RelativeLayout>
-    <TextView
-            android:text="相关推荐"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/mv_related_suggestion"
-            android:layout_marginTop="35dp"
-            android:textStyle="bold" android:textColor="#121111" android:textSize="16sp"/>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:orientation="vertical"
-                  android:layout_marginTop="20dp"
-              android:id="@+id/mv_related_suggestion_list"/>
-</LinearLayout>
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical"
+                          android:layout_marginTop="20dp"
+                          android:id="@+id/mv_related_suggestion_list"/>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

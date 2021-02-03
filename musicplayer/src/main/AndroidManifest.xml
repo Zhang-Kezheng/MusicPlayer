@@ -19,6 +19,10 @@
             android:theme="@style/AppTheme"
             android:usesCleartextTraffic="true"
             tools:targetApi="q">
+        <activity android:name=".activity.SingerActivity"
+                  android:theme="@style/TranslucentTheme"
+                  android:launchMode="singleTask">
+        </activity>
         <activity android:name=".activity.CollectActivity">
         </activity>
         <activity android:name=".activity.RecentActivity">
